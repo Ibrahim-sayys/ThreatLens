@@ -7,13 +7,15 @@ import os
 import re
 import sys
 import time
-import signal
-from datetime import datetime
+from datetime import datetime, UTC
 from urllib.parse import urljoin, urlparse
 import requests
-from bs4 import BeautifulSoup
 
-# Optional: start Tor automatically
+# import helper_methods
+from helper_methods._string_cleaner import clean_newlines
+from helper_methods._date_Normalizer import normalize_date
+
+# --- Tor integration ---
 try:
     from stem.process import launch_tor_with_config
     STEM_AVAILABLE = True
@@ -24,395 +26,288 @@ TOR_SOCKS_HOST = "127.0.0.1"
 TOR_SOCKS_PORT = 9050
 PROXIES = {
     "http": f"socks5h://{TOR_SOCKS_HOST}:{TOR_SOCKS_PORT}",
-    "https": f"socks5h://{TOR_SOCKS_PORT}:{TOR_SOCKS_PORT}",
+    "https": f"socks5h://{TOR_SOCKS_HOST}:{TOR_SOCKS_PORT}",
 }
-
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 )
-
-OUTPUT_JSON = "scrape_output.json"
 INPUT_CSV = "testing_input_urls.csv"
+OUTPUT_JSONL = "output.jsonl"
 
-# Regex for date-like strings (covers many common formats)
-DATE_REGEX = re.compile(
-    r"\b(?:\d{4}[-/]\d{1,2}[-/]\d{1,2}"
-    r"|\d{1,2}[-/]\d{1,2}[-/]\d{2,4}"
-    r"|\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{2,4}"
-    r"|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},\s+\d{2,4})\b",
-    flags=re.IGNORECASE,
+# --- File extensions to ignore ---
+SKIP_EXTENSIONS = (
+    ".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".bmp", ".ico", ".tiff", ".jfif", ".pjpeg", ".pjp", ".avif",
+    ".pdf", ".zip", ".rar", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".mp4", ".mp3", ".wav", ".ogg", ".avi", ".mov"
 )
 
-# --- Filtering image/file URLs ---
-IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".bmp", ".ico", ".tiff", ".jfif", ".pjpeg", ".pjp", ".avif"}
+# --- Common post path words and button classes ---
+POST_PATH_WORDS = ['post', 'posts', 'card', 'cards', 'news', 'article', 'articles', 'blog', 'entry', 'item', 'coos', 'more-info']
+POST_LINK_CLASSES = ['more-info-link', 'read-more', 'btn', 'article-link', 'card-link']
 
-OTHER_FILE_EXTENSIONS = {".pdf", ".zip", ".rar", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".mp4", ".mp3", ".wav", ".ogg", ".avi", ".mov"}
+DATE_REGEX = re.compile(
+    r"(\d{4}[-/]\d{1,2}[-/]\d{1,2}|"
+    r"\d{1,2}[-/]\d{1,2}[-/]\d{2,4}|"
+    r"\d{1,2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{2,4}|"
+    r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2}, \d{2,4})",
+    flags=re.IGNORECASE
+)
 
-def is_image_url(url):
-    path = urlparse(url).path.lower()
-    return any(path.endswith(ext) for ext in IMAGE_EXTENSIONS)
-
-def is_other_file_url(url):
-    path = urlparse(url).path.lower()
-    return any(path.endswith(ext) for ext in OTHER_FILE_EXTENSIONS)
-
-def is_html_or_no_ext(url):
-    path = urlparse(url).path.lower()
-    _, ext = os.path.splitext(path)
-    return (not ext) or ext in (".html", ".htm")
-
-# ---------- Tor bootstrap ----------
 def start_tor_if_needed():
+    print("[STEP] Checking Tor availability...")
     sess = requests.Session()
     sess.headers.update({"User-Agent": USER_AGENT})
     sess.proxies.update(PROXIES)
     try:
-        sess.get("http://httpbin.org/ip", timeout=5)
-        print("[TOR] Detected a running Tor SOCKS proxy on 9050 — using it.")
+        resp = sess.get("http://httpbin.org/ip", timeout=5)
+        print("[TOR] Detected running Tor proxy:", resp.text)
         return None
     except Exception:
         pass
-
     if not STEM_AVAILABLE:
-        print(
-            "[TOR] Tor is not running and `stem` is not installed. "
-            "Install Tor and/or run it manually on port 9050, "
-            "or `pip install stem` to allow auto-launch.",
-            file=sys.stderr,
-        )
+        print("[TOR] Tor not running and stem unavailable.")
         return None
-
-    print("[TOR] Attempting to launch Tor on 9050 via stem...")
+    print("[TOR] Launching Tor via stem...")
     try:
         tor_process = launch_tor_with_config(
-            config={
-                "SOCKSPort": str(TOR_SOCKS_PORT),
-                "Log": "notice stdout",
-            },
+            config={"SOCKSPort": str(TOR_SOCKS_PORT), "Log": "notice stdout"},
             take_ownership=True,
-            timeout=60,
+            timeout=60
         )
-        print("[TOR] Tor started.")
+        print("[TOR] Tor started successfully.")
         return tor_process
     except Exception as e:
-        print(f"[TOR] Failed to start Tor automatically: {e}", file=sys.stderr)
+        print(f"[TOR] Could not start Tor: {e}", file=sys.stderr)
         return None
 
-# ---------- IO helpers ----------
-def read_urls(csv_path: str):
+def read_urls(csv_path):
+    print(f"[STEP] Reading URLs from {csv_path}...")
     urls = []
     if not os.path.exists(csv_path):
         print(f"[IO] Input CSV not found: {csv_path}", file=sys.stderr)
         return urls
-
     with open(csv_path, "r", encoding="utf-8", newline="") as f:
         reader = csv.reader(f)
-        for i, row in enumerate(reader):
-            if not row:
-                continue
-            candidate = row[0].strip()
-            if not candidate:
-                continue
-            if i == 0 and not candidate.lower().startswith(("http://", "https://")) and not candidate.endswith(".onion"):
-                continue
-            urls.append(candidate)
+        for row in reader:
+            if row and row[0].strip():
+                url = row[0].strip()
+                if url.lower().startswith(("http://", "https://")) or url.endswith(".onion"):
+                    urls.append(url)
+                    print(f"[CSV] Found URL: {url}")
     return urls
 
-# ---------- Parsing & extraction ----------
-def clean_soup(soup: BeautifulSoup):
+def clean_soup(soup):
     for tag in soup(["script", "style", "noscript", "iframe", "canvas", "svg"]):
         tag.decompose()
-    for selector in [
-        "header", "footer", "nav", "form", "aside",
-        "[role='navigation']", "[role='search']",
-        ".header", ".footer", ".nav", ".navbar", ".menu", ".sidebar",
-        ".ads", ".advertisement", ".promo", ".cookie", "#cookie", ".subscribe",
-    ]:
-        for tag in soup.select(selector):
-            tag.decompose()
     return soup
 
-def extract_headings(soup: BeautifulSoup):
-    heads = []
-    for level in ["h1", "h2", "h3", "h4", "h5", "h6"]:
-        for h in soup.find_all(level):
-            text = h.get_text(separator=" ", strip=True)
-            if text:
-                heads.append({"tag": level, "text": text})
-    return heads
+def is_internal_link(url, base_url):
+    parsed_abs = urlparse(url)
+    parsed_base = urlparse(base_url)
+    return parsed_abs.netloc == parsed_base.netloc or (parsed_abs.netloc == '' and parsed_base.netloc != '')
 
-def extract_links(soup: BeautifulSoup, base_url: str, same_domain_only=True):
-    base = urlparse(base_url)
-    links = []
+def is_post_like_path(path):
+    return any(word in path.lower() for word in POST_PATH_WORDS)
+
+def is_skip_ext(url):
+    path = urlparse(url).path.lower()
+    return any(path.endswith(ext) for ext in SKIP_EXTENSIONS)
+
+def url_equivalent(u1, u2):
+    # Remove trailing slashes for comparison
+    return u1.rstrip('/') == u2.rstrip('/')
+
+def is_post_like_path(path, query):
+    # Match classic post/card/news/article/etc. in path
+    if any(word in path.lower() for word in POST_PATH_WORDS):
+        return True
+    # Match URLs with uuid/id as query param (for detail pages)
+    if re.search(r"(uuid=|id=|post=|item=)[a-zA-Z0-9\-]+", query):
+        return True
+    return False
+
+def extract_post_links(soup, base_url):
+    print(f"[STEP] Extracting post links from {base_url}...")
+    links = set()
     for a in soup.find_all("a", href=True):
         href = a["href"].strip()
-        if not href or href.startswith("#") or href.lower().startswith("javascript:"):
-            continue
         abs_url = urljoin(base_url, href)
         parsed = urlparse(abs_url)
-        if parsed.scheme not in ("http", "https"):
+        if is_skip_ext(abs_url):
             continue
-        if same_domain_only and parsed.netloc and parsed.netloc != base.netloc:
+        if not is_internal_link(abs_url, base_url):
             continue
-        # --- skip image/file hrefs ---
-        if is_image_url(abs_url):
-            continue
-        if is_other_file_url(abs_url):
-            continue
-        # Optionally: only allow HTML or no extension
-        # if not is_html_or_no_ext(abs_url):
-        #     continue
-        links.append({"text": a.get_text(strip=True), "url": abs_url})
-    # Deduplicate by URL
-    seen = set()
-    uniq = []
-    for item in links:
-        if item["url"] not in seen:
-            seen.add(item["url"])
-            uniq.append(item)
-    return uniq
+        if is_post_like_path(parsed.path, parsed.query):
+            if not url_equivalent(abs_url, base_url):
+                print(f"[LINK] Found post-like path or query: {abs_url}")
+                links.add(abs_url)
+            else:
+                print(f"[SKIP] Ignoring base_url: {abs_url}")
+    for cls in POST_LINK_CLASSES:
+        for a in soup.find_all("a", href=True, class_=re.compile(cls)):
+            abs_url = urljoin(base_url, a["href"].strip())
+            if not url_equivalent(abs_url, base_url):
+                print(f"[LINK] Found by class {cls}: {abs_url}")
+                links.add(abs_url)
+            else:
+                print(f"[SKIP] Ignoring base_url (by class): {abs_url}")
+    return list(links)
 
-def extract_timestamps(soup: BeautifulSoup, text_blob: str):
-    stamps = set()
+def fetch_url(session, url, timeout=30):
+    print(f"[FETCH] Fetching: {url}")
+    tries = 3
+    for attempt in range(tries):
+        try:
+            resp = session.get(url, timeout=timeout, allow_redirects=True)
+            resp.encoding = resp.encoding or resp.apparent_encoding
+            print(f"[FETCH] Success {url} (status {resp.status_code})")
+            return resp.status_code, resp.text
+        except Exception as e:
+            print(f"[HTTP] {url} attempt {attempt+1}/{tries} failed: {e}")
+            time.sleep(2)
+    print(f"[ERROR] Giving up on {url}")
+    return None, None
+
+def scrape_site_posts(session, base_url):
+    status_code, html = fetch_url(session, base_url)
+    if status_code != 200 or not html:
+        print(f"[ERROR] Could not fetch main page: {base_url} (status {status_code})")
+        return []
+    soup = BeautifulSoup(html, "lxml")
+    clean_soup(soup)
+    post_links = extract_post_links(soup, base_url)
+    print(f"[INFO] {len(post_links)} post-like links found for {base_url}")
+    results = []
+    scraped_urls = set()
+    for idx, post_url in enumerate(post_links):
+        norm_url = post_url.rstrip('/')
+        if url_equivalent(norm_url, base_url):
+            print(f"[SKIP] Ignoring same as base_url: {norm_url}")
+            continue
+        if norm_url in scraped_urls:
+            continue
+        scraped_urls.add(norm_url)
+        post_status, post_html = fetch_url(session, norm_url)
+        if post_status != 200 or not post_html:
+            continue
+        main_text, date_found, company_url = extract_content_and_date(post_html, norm_url)
+        if not main_text or len(main_text.strip()) < 50:
+            print(f"[WARN] Post {norm_url} had no real content.")
+            continue
+        record = {
+            "post_url": norm_url,
+            "base_url": base_url,
+            "scraped_at": datetime.now(UTC).isoformat().replace('+00:00', 'Z'),
+            "date": date_found,
+            "company_url": company_url,
+            "content": main_text,
+        }
+        print(f"[OK] Scraped post: {norm_url}")
+        results.append(record)
+        time.sleep(1.0)
+    return results
+from bs4 import BeautifulSoup, Tag
+
+def extract_content_and_date(html, url):
+    soup = BeautifulSoup(html, "lxml")
+    clean_soup(soup)
+    post_container = soup.find("div", class_="col-md-8 col-xl-6")
+    main_text = ""
+    date_found = ""
+    company_url = ""
+
+    if post_container:
+        paragraphs = []
+        for child in post_container.children:
+            # If child is a Tag, check its class
+            if isinstance(child, Tag):
+                if not (child.has_attr("class") and "item_box-info" in child.get("class", [])):
+                    text = child.get_text(" ", strip=True)
+                    if text and len(text) > 40:
+                        paragraphs.append(text)
+            # If it's NavigableString, just add text
+            elif isinstance(child, str):
+                text = child.strip()
+                if text and len(text) > 40:
+                    paragraphs.append(text)
+        if paragraphs:
+            main_text = " ".join(paragraphs)
+
+        # Find date in the clock icon row
+        for info in post_container.find_all("div", class_="item_box-info__item"):
+            img = info.find("img", class_="item_box__icon")
+            if img and "clock.png" in img.get("src", ""):
+                date_found = info.get_text(" ", strip=True).replace('\n', '').replace('\r', '')
+            link = info.find("a", class_="item_box-info__link")
+            if link:
+                company_url = link.get("href", "")
+    else:
+        # Fallback: old method
+        main_text, date_found = extract_content_and_date_old(html, url)
+        company_url = ""
+
+    main_text = main_text.strip()
+    main_text= clean_newlines(main_text)
+    date_found = date_found.strip()
+    date_found = normalize_date(date_found)
+    company_url = company_url.strip()
+    print(f"[SPECIAL] Date: {date_found}, Company URL: {company_url}")
+    print(f"[SPECIAL] Text preview: {main_text[:200]}...")
+    return main_text, date_found, company_url
+
+# Fallback method for pages without this structure
+def extract_content_and_date_old(html, url):
+    soup = BeautifulSoup(html, "lxml")
+    clean_soup(soup)
+    text_candidates = []
+    for sel in ["article", "main", ".post", ".card", ".entry-content", ".content", ".news", ".article"]:
+        for node in soup.select(sel):
+            txt = node.get_text(" ", strip=True)
+            if txt and len(txt) > 80:
+                text_candidates.append(txt)
+    if not text_candidates:
+        text_candidates = [" ".join([p.get_text(' ', strip=True) for p in soup.find_all("p") if len(p.get_text(strip=True)) > 40])]
+    date_found = ""
     for t in soup.find_all("time"):
         dt = (t.get("datetime") or "").strip()
         txt = t.get_text(" ", strip=True)
         if dt:
-            stamps.add(dt)
-        if txt and DATE_REGEX.search(txt):
-            stamps.add(txt)
-    for selector, attr in [
-        ('meta[property="article:published_time"]', "content"),
-        ('meta[name="pubdate"]', "content"),
-        ('meta[name="date"]', "content"),
-        ('meta[name="dc.date"]', "content"),
-        ('meta[itemprop="datePublished"]', "content"),
-        ('meta[itemprop="dateModified"]', "content"),
-    ]:
-        for m in soup.select(selector):
-            val = (m.get(attr) or "").strip()
-            if val:
-                stamps.add(val)
-    for match in DATE_REGEX.findall(text_blob or ""):
-        stamps.add(match.strip())
-    return sorted(stamps)
+            date_found = dt
+            break
+        if txt:
+            date_found = txt
+            break
+    main_text = text_candidates[0] if text_candidates else ""
+    return main_text, date_found
 
-def extract_main_text(soup: BeautifulSoup):
-    candidates = []
-    for sel in ["article", "main", "#content", ".content", ".post", ".article", ".entry-content"]:
-        for node in soup.select(sel):
-            txt = node.get_text(" ", strip=True)
-            if txt and len(txt) > 120:
-                candidates.append(txt)
-    if candidates:
-        chunks = []
-        for block in candidates:
-            parts = [p.strip() for p in re.split(r"\n{2,}|\r{2,}", block) if p.strip()]
-            chunks.extend(parts)
-        paragraphs = []
-        for c in chunks:
-            if len(c) > 2000:
-                paragraphs.extend([p.strip() for p in re.split(r"(?<=[.!?])\s+", c) if len(p.strip()) > 40])
-            else:
-                paragraphs.append(c)
-        return [p for p in paragraphs if len(p) > 40]
-    paras = []
-    for p in soup.find_all(["p", "div", "span"]):
-        txt = p.get_text(" ", strip=True)
-        if txt and len(txt) > 40:
-            paras.append(txt)
-    seen = set()
-    out = []
-    for p in paras:
-        if p not in seen:
-            seen.add(p)
-            out.append(p)
-    return out[:500]
-
-# ---------- HTTP ----------
-def fetch_url(session: requests.Session, url: str, timeout: int = 30):
-    tries = 3
-    for attempt in range(1, tries + 1):
-        try:
-            resp = session.get(url, timeout=timeout, allow_redirects=True)
-            resp.encoding = resp.encoding or resp.apparent_encoding
-            return resp.status_code, resp.text
-        except requests.RequestException as e:
-            print(f"[HTTP] Attempt {attempt}/{tries} failed for {url}: {e}")
-            if attempt < tries:
-                time.sleep(2 * attempt)
-            else:
-                raise
-    raise requests.RequestException("Max retries exceeded")
-
-# ---------- Post-detection heuristics ----------
-NUMERIC_OR_SLUGGY = re.compile(r"^(\d{2,}|[a-f0-9]{6,}|page|p|post|article|news|blog)s?$", re.IGNORECASE)
-
-def _parent_key_from_path(path: str, depth: int = 2) -> str:
-    segs = [s for s in path.split("/") if s]
-    if not segs:
-        return "/"
-    keep = segs[: min(len(segs), depth)]
-    return "/" + "/".join(keep) + "/"
-
-def _loose_parent_key(path: str) -> str:
-    segs = [s for s in path.split("/") if s]
-    if not segs:
-        return "/"
-    if len(segs) == 1:
-        return "/"
-    if NUMERIC_OR_SLUGGY.match(segs[-1]):
-        segs = segs[:-1]
-    return "/" + "/".join(segs[:2]) + "/"
-
-def detect_post_buckets(links, base_url):
-    base_netloc = urlparse(base_url).netloc
-    by_bucket = {}
-    def add(bucket, url):
-        by_bucket.setdefault(bucket, set()).add(url)
-    for item in links:
-        url = item["url"]
-        parsed = urlparse(url)
-        if parsed.netloc != base_netloc:
-            continue
-        path = parsed.path or "/"
-        for d in (1, 2, 3):
-            add(f"strict:{d}:{_parent_key_from_path(path, d)}", url)
-        add(f"loose:{_loose_parent_key(path)}", url)
-    MIN_POSTS = 6
-    big_buckets = {k: sorted(v) for k, v in by_bucket.items() if len(v) >= MIN_POSTS}
-    big_buckets = dict(sorted(big_buckets.items(), key=lambda kv: len(kv[1]), reverse=True))
-    return big_buckets
-
-# ---------- Scraping orchestration ----------
-def scrape_page(session, url):
-    record = {
-        "url": url,
-        "fetched_at": datetime.utcnow().isoformat() + "Z",
-        "status": "ok",
-        "http_status": None,
-        "headings": [],
-        "content": [],
-        "links": [],
-        "timestamps": [],
-        "error": None,
-    }
-    try:
-        status_code, html = fetch_url(session, url)
-        record["http_status"] = status_code
-        if status_code != 200 or not html:
-            record["status"] = "http_error"
-            return record
-        soup = BeautifulSoup(html, "lxml")
-        soup = clean_soup(soup)
-        headings = extract_headings(soup)
-        content_paras = extract_main_text(soup)
-        links = extract_links(soup, base_url=url, same_domain_only=True)
-        text_blob = " ".join(content_paras[:100])
-        timestamps = extract_timestamps(soup, text_blob)
-        record["headings"] = headings
-        record["content"] = content_paras
-        record["links"] = links
-        record["timestamps"] = timestamps
-    except requests.RequestException as e:
-        record["status"] = "network_error"
-        record["error"] = str(e)
-    except Exception as e:
-        record["status"] = "parse_error"
-        record["error"] = f"{type(e).__name__}: {e}"
-    return record
-
-def scrape_urls(urls):
-    results = []
-    session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT})
-    session.proxies.update(PROXIES)
-    for idx, url in enumerate(urls, start=1):
-        print(f"\n[{idx}/{len(urls)}] Scanning index page: {url}")
-        try:
-            status_code, html = fetch_url(session, url)
-        except Exception as e:
-            print(f"[SCAN] Failed to open {url}: {e}")
-            error_rec = {
-                "url": url,
-                "fetched_at": datetime.utcnow().isoformat() + "Z",
-                "status": "network_error",
-                "http_status": None,
-                "headings": [],
-                "content": [],
-                "links": [],
-                "timestamps": [],
-                "error": str(e),
-            }
-            results.append(error_rec)
-            continue
-        if status_code != 200 or not html:
-            print(f"[SCAN] Non-200 or empty response for {url}: HTTP {status_code}")
-            results.append({
-                "url": url,
-                "fetched_at": datetime.utcnow().isoformat() + "Z",
-                "status": "http_error",
-                "http_status": status_code,
-                "headings": [],
-                "content": [],
-                "links": [],
-                "timestamps": [],
-                "error": f"HTTP {status_code}",
-            })
-            continue
-        soup = BeautifulSoup(html, "lxml")
-        soup = clean_soup(soup)
-        internal_links = extract_links(soup, base_url=url, same_domain_only=True)
-        buckets = detect_post_buckets(internal_links, base_url=url)
-        if buckets:
-            print(f"[SCAN] Detected {len(buckets)} post-bucket(s). Scraping posts…")
-            post_urls = []
-            for bucket_key, urls_in_bucket in buckets.items():
-                print(f"  - Bucket {bucket_key} -> {len(urls_in_bucket)} links")
-                # --- filter out image/file URLs (redundant but safest) ---
-                filtered_urls = [
-                    u for u in urls_in_bucket
-                    if not is_image_url(u) and not is_other_file_url(u) and is_html_or_no_ext(u)
-                ]
-                post_urls.extend(filtered_urls)
-            seen = set()
-            post_urls = [u for u in post_urls if not (u in seen or seen.add(u))]
-            for j, post_url in enumerate(post_urls, start=1):
-                print(f"   [post {j}/{len(post_urls)}] {post_url}")
-                rec = scrape_page(session, post_url)
-                rec["source_index_url"] = url
-                results.append(rec)
-                time.sleep(1.0)
-        else:
-            print("[SCAN] No repeating post-like links found. Scraping the page itself (fallback).")
-            rec = scrape_page(session, url)
-            results.append(rec)
-            time.sleep(1.0)
-    return results
-
-# ---------- Main ----------
 def main():
     tor_process = start_tor_if_needed()
     try:
         urls = read_urls(INPUT_CSV)
         if not urls:
-            print("[IO] No URLs to process. Check your CSV.")
+            print("[ERROR] No URLs to process. Check your CSV.")
             return
-        data = scrape_urls(urls)
-        with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        print(f"\n[OK] Saved {len(data)} records to {OUTPUT_JSON}")
+        session = requests.Session()
+        session.headers.update({"User-Agent": USER_AGENT})
+        if any(u.endswith(".onion") for u in urls):
+            print("[INFO] Onion site detected — using Tor proxy.")
+            session.proxies.update(PROXIES)
+        with open(OUTPUT_JSONL, "w", encoding="utf-8") as out_f:
+            for base_url in urls:
+                print(f"\n[INFO] Scraping base_url: {base_url}")
+                posts = scrape_site_posts(session, base_url)
+                for rec in posts:
+                    out_f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                print(f"[OK] {len(posts)} posts written for {base_url}")
+                time.sleep(1.0)
+        print(f"\n[COMPLETE] All results written to {OUTPUT_JSONL}")
     finally:
         if tor_process is not None:
             print("[TOR] Shutting down Tor...")
             try:
                 tor_process.terminate()
             except Exception:
-                try:
-                    os.kill(tor_process.pid, signal.SIGKILL)
-                except Exception:
-                    pass
+                pass
 
 if __name__ == "__main__":
     main()
