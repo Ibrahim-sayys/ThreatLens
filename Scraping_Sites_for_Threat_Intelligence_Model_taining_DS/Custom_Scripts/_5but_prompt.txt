@@ -1,0 +1,66 @@
+ok so now i will provide u the details of the task
+the structure of the site and what data i need u to get and store in the csv as per the enums i have created
+
+
+so when u open the site u will se div of class "companies-list__item"
+
+in which there will be the follwoing data:
+<div class="name">
+                                        <a href="http://5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.onion/companies/98/dovern-import">DOVERN Import</a>
+                                    </div> from this u need to get the company name in m_comapany_name
+
+
+<div class="text">
+                                        <p></p><p>At DOVERN Import, we are passionate about the art of rare wines and champagnes. Since 2001, we have had the honor of selecting and importing wines and champagnes to Morocco, primarily from the prestigious terroirs of France. Our mission is to showcase unique and often overlooked wineries, while adhering to strict quality standards.<br><br>We have created an exclusive selection for wine and champagne enthusiasts in Morocco, sourced from the finest wine regions such as the Rhône Valley, Champagne, Burgundy, and Bordeaux. Our commitment to our clients and restaurateurs is reflected in our personalized service, offering them exclusive access to our flagship products.<br><br>Based in Casablanca, DOVERN Import is the go-to source for those seeking wines and champagnes in Morocco, offering unique and personalized tastings. Our philosophy is founded on authenticity, excellence, and a love of wine.</p><p><br></p><ul><li>Personal information of employees and clients</li><li>Financial documents</li></ul><p><br></p><p></p>
+                                        <p><a href="https://dovern-import.com/">https://dovern-import.com/</a></p>
+                                    </div> from this get the text in m_content
+
+<a href="https://gofile.io/d" target="_blank" class="btn btn-primary">Download</a> get the href from this and store in m_download_link
+
+<div class="image" style="--bg: #494949">
+                                        <div class="img">
+                                            <img src="http://5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.onion/storage/companies/vw42MIVSeRcTjnwRoFzNv0V9eZzfaKMaHHExjQxX.jpg" alt="">
+                                        </div>
+                                        <p>Published 1 week ago</p>
+                                        <p>
+                                            Views: 7238
+                                        </p>
+                                    </div> from this get the img src in m_image_url, the published time in m_date and the views in m_views_count
+
+
+
+when u got all this then when the end of the page comes,there <ul class="pagination">
+
+                            <li class="disabled" aria-disabled="true" aria-label="« Previous">
+                    <span aria-hidden="true">‹‹</span>
+                </li>
+
+
+
+
+
+                                                                                        <li class="active" aria-current="page"><span>1</span></li>
+                                                                                                <li><a href="http://5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.onion?page=2">2</a></li>
+
+
+                            <li>
+                    <a href="http://5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.onion?page=2" rel="next" aria-label="Next »">››</a>
+                </li>
+                    </ul> use this paginaion go to next page and do the same for this
+
+so basically keep going till the last page and get all the data from all the pages and store in the csv
+
+
+
+
+
+
+
+
+
+
+
+prompt 2:
+
+pass m_content text to the helper _country_extractor to get the country and store in m_country enum
+prompt 1:
