@@ -10,6 +10,13 @@ import os
 import re
 from urllib.parse import urljoin
 from datetime import datetime
+from helper_methods._URL_extractor import extract_urls
+from helper_methods._stopword_filtering import remove_stopwords
+from helper_methods._date_Normalizer import parse_relative_date
+from helper_methods._industry_extractor import IndustryClassifier
+from helper_methods._country_extractor import extract_countries
+from helper_methods._breach_dept import SpacyDepartmentExtractor
+
 # Add parent directory to path to import modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -20,7 +27,7 @@ from scraper_base import (
     clean_newlines,
     validate_record
 )
-from helper_methods._date_Normalizer import parse_relative_date
+
 
 # --- Configuration ---
 TARGET_URL = "http://5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.onion/#list"
@@ -28,6 +35,16 @@ TARGET_URL = "http://5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.on
 
 class RansomSiteScraper(BaseScraper):
     """Scraper for 5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.onion"""
+
+    def __init__(self, target_url: str, use_tor: bool = None):
+        """Initialize the scraper with helper classifiers"""
+        super().__init__(target_url, use_tor)
+
+        # Initialize helper classifiers (reuse across all records)
+        print("[INFO] Initializing helper classifiers...")
+        self.industry_classifier = IndustryClassifier()
+        self.dept_extractor = SpacyDepartmentExtractor()
+        print("[INFO] Helper classifiers ready!")
 
     def parse_leak_data(self, soup):
         """
@@ -116,14 +133,8 @@ class RansomSiteScraper(BaseScraper):
                 if text_div:
                     content = clean_newlines(text_div.get_text())
 
-                    # Try to extract website URL from content
-                    links = text_div.find_all('a', href=True)
-                    for link in links:
-                        href = link.get('href', '').strip()
-                        if href and (href.startswith('http://') or href.startswith('https://')):
-                            if '.onion' not in href:
-                                website = href
-                                break
+                    # Use the helper to extract URLs from content
+                    urls = extract_urls(content)
 
                 # Extract download link
                 download_link = ""
@@ -198,7 +209,55 @@ class RansomSiteScraper(BaseScraper):
                 record[ThreatDataFields.m_status.value]           = "active"
 
                 # ============================================
-                # STEP 3: Validate and save
+                # STEP 3: Use helper methods to extract additional data
+                # ============================================
+
+                # Extract industry from content
+                if content:
+                    try:
+                        industry = self.industry_classifier.get_industry(content)
+                        record[ThreatDataFields.m_industry.value] = industry
+                    except Exception as e:
+                        print(f"    [WARNING] Industry extraction failed: {e}")
+                        record[ThreatDataFields.m_industry.value] = "Unknown"
+
+                # Extract countries from content
+                if content:
+                    try:
+                        countries = extract_countries(content)
+                        if countries:
+                            if isinstance(countries, list):
+                                record[ThreatDataFields.m_country.value] = ", ".join(countries)
+                            else:
+                                record[ThreatDataFields.m_country.value] = countries
+                    except Exception as e:
+                        print(f"    [WARNING] Country extraction failed: {e}")
+
+                # Extract departments (which can help infer records affected)
+                if content:
+                    try:
+                        departments = self.dept_extractor.extract_departments(content)
+                        if departments:
+                            # Store departments in data_type field (or you can add a new field)
+                            record[ThreatDataFields.m_data_type.value] = ", ".join(departments)
+
+                            # Infer records_affected based on department count and severity
+                            # This is a heuristic - adjust as needed
+                            dept_count = len(departments)
+                            if "General Breach" not in departments:
+                                if dept_count >= 5:
+                                    record[ThreatDataFields.m_records_affected.value] = "10000+"
+                                elif dept_count >= 3:
+                                    record[ThreatDataFields.m_records_affected.value] = "5000+"
+                                elif dept_count >= 2:
+                                    record[ThreatDataFields.m_records_affected.value] = "1000+"
+                                else:
+                                    record[ThreatDataFields.m_records_affected.value] = "500+"
+                    except Exception as e:
+                        print(f"    [WARNING] Department extraction failed: {e}")
+
+                # ============================================
+                # STEP 4: Validate and save
                 # ============================================
 
                 is_valid, missing = validate_record(record)
