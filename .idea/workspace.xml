@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79b9d086-a9b6-421c-b4b7-108793673c01" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/check.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helper_methods/_breach_dept.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helper_methods/_breach_extractor_bart.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helper_methods/_stopword_filtering.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/ThreatLens.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ThreatLens.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper_methods/_breach_extractor.py" beforeDir="false" afterPath="$PROJECT_DIR$/helper_methods/_breach_extractor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,8 +68,11 @@
     "Python tests.Python tests in test_process_urls.py.executor": "Run",
     "Python.Main.executor": "Run",
     "Python.Main_process_URLs.executor": "Run",
+    "Python._breach_dept_extractor_gemini.executor": "Run",
     "Python._breach_extractor.executor": "Run",
+    "Python._breach_extractor_bart.executor": "Run",
     "Python._model_training.executor": "Run",
+    "Python._spacy_dept_finder.executor": "Run",
     "Python.check.executor": "Run",
     "Python.general_scrapper.executor": "Run",
     "Python.imp_stuff_extractor.executor": "Run",
@@ -84,7 +89,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
@@ -94,7 +99,53 @@
       <recent name="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     </key>
   </component>
-  <component name="RunManager" selected="Python._breach_extractor">
+  <component name="RunManager" selected="Python._breach_dept">
+    <configuration name="_breach_dept" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ThreatLens" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_breach_dept.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="_breach_dept_extractor_gemini" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ThreatLens" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_breach_dept_extractor_gemini.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="_breach_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
@@ -118,7 +169,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="_model_training" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="_breach_extractor_bart" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -127,12 +178,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/_Website_Classification_Models" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/_Website_Classification_Models/_model_training.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_breach_extractor_bart.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -164,59 +215,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="general_scrapper" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ThreatLens" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/general_scrapper.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="imp_stuff_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ThreatLens" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/imp_stuff_extractor.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python._breach_dept" />
+        <item itemvalue="Python._breach_dept_extractor_gemini" />
+        <item itemvalue="Python._breach_extractor_bart" />
         <item itemvalue="Python._breach_extractor" />
         <item itemvalue="Python.check" />
-        <item itemvalue="Python.general_scrapper" />
-        <item itemvalue="Python.imp_stuff_extractor" />
-        <item itemvalue="Python._model_training" />
       </list>
     </recent_temporary>
   </component>
@@ -252,6 +257,7 @@
       <workItem from="1763310264798" duration="1220000" />
       <workItem from="1763311496973" duration="88000" />
       <workItem from="1763312038851" duration="352000" />
+      <workItem from="1763365283673" duration="14431000" />
     </task>
     <servers />
   </component>
@@ -270,12 +276,16 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ThreatLens$_breach_dept_extractor_gemini.coverage" NAME="_breach_dept_extractor_gemini Coverage Results" MODIFIED="1763476387659" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
     <SUITE FILE_PATH="coverage/ThreatLens$imp_stuff_extractor.coverage" NAME="imp_stuff_extractor Coverage Results" MODIFIED="1756064067287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     <SUITE FILE_PATH="coverage/ThreatLens$check.coverage" NAME="check Coverage Results" MODIFIED="1763311020059" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     <SUITE FILE_PATH="coverage/ThreatLens$general_scrapper.coverage" NAME="general_scrapper Coverage Results" MODIFIED="1762924238466" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     <SUITE FILE_PATH="coverage/ThreatLens$.coverage" NAME=" Coverage Results" MODIFIED="1755111972834" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ThreatLens$_model_training.coverage" NAME="_model_training Coverage Results" MODIFIED="1755174394417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/_Website_Classification_Models" />
+    <SUITE FILE_PATH="coverage/ThreatLens$_breach_extractor_bart.coverage" NAME="_breach_extractor_bart Coverage Results" MODIFIED="1763474101241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
+    <SUITE FILE_PATH="coverage/ThreatLens$_spacy_dept_finder.coverage" NAME="_spacy_dept_finder Coverage Results" MODIFIED="1763477051165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
     <SUITE FILE_PATH="coverage/ThreatLens$Main.coverage" NAME="Main_process_URLs Coverage Results" MODIFIED="1755111887666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Website_Classification" />
+    <SUITE FILE_PATH="coverage/ThreatLens$_breach_extractor.coverage" NAME="_breach_extractor Coverage Results" MODIFIED="1763473887155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
