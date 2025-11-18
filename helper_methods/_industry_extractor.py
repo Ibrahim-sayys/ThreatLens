@@ -260,8 +260,8 @@ Our various bases at Annecy airport (crossroads between France, Switzerland and 
 
     # Example 3: Technology company
     tech_text = """
-    TechSolutions Inc. develops innovative software solutions for enterprise clients,
-    specializing in cloud computing, artificial intelligence, and cybersecurity.
+    apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. The company also offers software
+    services, including 
     """
 
     industry3 = classifier.get_industry(tech_text)
