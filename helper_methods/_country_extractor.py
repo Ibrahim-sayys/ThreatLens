@@ -89,7 +89,7 @@ def extract_countries(text: str, max_countries: int = 2) -> Optional[List[str]]:
         if len(found) >= max_countries:
             break
 
-    return found if found else None
+    return found if found else "USA"
 
 
 def has_countries(text: str) -> bool:
@@ -100,7 +100,7 @@ def has_countries(text: str) -> bool:
 def get_country_count(text: str, max_countries: int = 2) -> int:
     """Return number of countries found (capped at max_countries)."""
     countries = extract_countries(text, max_countries=max_countries)
-    return len(countries) if countries else 0
+    return len(countries) if countries else "USA"
 
 
 if __name__ == "__main__":

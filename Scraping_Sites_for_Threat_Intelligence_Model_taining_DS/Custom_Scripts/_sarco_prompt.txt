@@ -1,0 +1,61 @@
+ok so now i will provide u the details of the task,create fucntion for the followin
+the structure of the site and what data i need u to get and store in the csv as per the enums i have created
+
+when u open the site u will se div of class "row row-cols-4 mb-4"
+in which there will be
+												<button type="button" class="btn btn-lg btn-block indigo text-center text-white d-block m-auto company_button" data-bs-toggle="modal" data-bs-target="#company_145" style="padding: .375rem .75rem;">More info</button>
+click on this button,
+a new small window will pop up on the same page with all the details of the company
+in which u will find the following data:
+
+<div class="modal-header">
+								<h5 class="modal-title text-white" id="company_141_label">Thermofin</h5>
+								<button type="button" class="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+from the above u will get the name of the company in m_comapany_name
+
+
+
+<div class="modal-header">
+								<h5 class="modal-title text-white" id="company_141_label">Thermofin</h5>
+								<button type="button" class="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							from above get m_content
+
+
+<div>GEO: Germany</div> from this get country in m_country countery name is after GEO: do not use helper method for this as in this we have the name present seperately
+
+
+<div>Leak size: 2.9 TB Archive</div>
+    from this get leak size in m_leak_size use helper method to get size only helper method name "_data_size_normalizer.py"
+
+
+
+<div>Contains: Files, SQL, Exchange</div>
+from this get data in data_type
+
+
+
+<div class="text-center text-danger">Download Link: <a href="http://zncifh3szqf6awg3o33qyoi43tzjaakcjmmhuytii5bsl33wwblt7yid.onion/" target="_blank" class="text-danger">http://zncifh3szqf6awg3o33qyoi43tzjaakcjmmhuytii5bsl33wwblt7yid.onion/</a></div>
+from this get the href in the download_link
+
+
+from this div of class "modal-body text-white"
+get all the img's src and store in m_image_url as comma separated if more than one image is present
+
+
+when u got all this then when the end of the page comes.
+<div class="text-center text-white">
+										<a href="/?page=1" class="text-white text-decoration-none">1</a>
+										<a href="/?page=2" class="text-white">2</a>
+										<a href="/?page=3" class="text-white">3</a>
+										<a href="/?page=4" class="text-white">4</a>
+										<a href="/?page=5" class="text-white">5</a>
+										<a href="/?page=6" class="text-white">6</a>
+										<a href="/?page=7" class="text-white">7</a>
+									</div>
+
+									this is the html for the pagination use this pagination go to next page and do the same for this
+
+
+
