@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79b9d086-a9b6-421c-b4b7-108793673c01" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_sarco_prompt.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helper_methods/_data_size_normalizer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/threat_intelligence_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/threat_intelligence_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper_methods/_country_extractor.py" beforeDir="false" afterPath="$PROJECT_DIR$/helper_methods/_country_extractor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +68,7 @@
     "Python._breach_dept_extractor_gemini.executor": "Run",
     "Python._breach_extractor.executor": "Run",
     "Python._breach_extractor_bart.executor": "Run",
+    "Python._category_classifier.executor": "Run",
     "Python._country_extractor.executor": "Run",
     "Python._industry_extractor.executor": "Run",
     "Python._model_training.executor": "Run",
@@ -87,7 +83,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad__script",
+    "git-widget-placeholder": "__classification__model__updation",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "/home/ibrahim-sayys/Projects/ThreatLens/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS",
     "node.js.detected.package.eslint": "true",
@@ -105,7 +101,7 @@
       <recent name="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     </key>
   </component>
-  <component name="RunManager" selected="Python._sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad">
+  <component name="RunManager" selected="Python._category_classifier">
     <configuration name="_5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
@@ -152,7 +148,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="_country_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="_category_classifier" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -161,12 +157,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/_Website_classificatio_v1" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/_Website_classificatio_v1/_category_classifier.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -198,7 +194,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="_industry_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="_country_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -212,7 +208,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_industry_extractor.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -310,33 +306,13 @@
       <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="Doctests in _country_extractor" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <module name="ThreatLens" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python._category_classifier" />
         <item itemvalue="Python._sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python._5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid" />
         <item itemvalue="Python._country_extractor" />
-        <item itemvalue="Python tests.Doctests in _country_extractor" />
       </list>
     </recent_temporary>
   </component>
@@ -393,6 +369,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ThreatLens$imp_stuff_extractor.coverage" NAME="imp_stuff_extractor Coverage Results" MODIFIED="1756064067287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
+    <SUITE FILE_PATH="coverage/ThreatLens$_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad.coverage" NAME="_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad Coverage Results" MODIFIED="1763573984043" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
     <SUITE FILE_PATH="coverage/ThreatLens$.coverage" NAME=" Coverage Results" MODIFIED="1755111972834" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ThreatLens$_country_extractor.coverage" NAME="_country_extractor Coverage Results" MODIFIED="1763497239771" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
     <SUITE FILE_PATH="coverage/ThreatLens$_industry_extractor.coverage" NAME="_industry_extractor Coverage Results" MODIFIED="1763478648313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
@@ -402,9 +379,11 @@
     <SUITE FILE_PATH="coverage/ThreatLens$check.coverage" NAME="check Coverage Results" MODIFIED="1763311020059" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     <SUITE FILE_PATH="coverage/ThreatLens$general_scrapper.coverage" NAME="general_scrapper Coverage Results" MODIFIED="1762924238466" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     <SUITE FILE_PATH="coverage/ThreatLens$main.coverage" NAME="main Coverage Results" MODIFIED="1763538168624" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
-    <SUITE FILE_PATH="coverage/ThreatLens$_model_training.coverage" NAME="_model_training Coverage Results" MODIFIED="1755174394417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/_Website_Classification_Models" />
+    <SUITE FILE_PATH="coverage/ThreatLens$rhym_scnd_drill.coverage" NAME="rhym_scnd_drill Coverage Results" MODIFIED="1763632622438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
+    <SUITE FILE_PATH="coverage/ThreatLens$_category_classifier.coverage" NAME="_category_classifier Coverage Results" MODIFIED="1763754758479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/_Website_classificatio_v1" />
     <SUITE FILE_PATH="coverage/ThreatLens$_breach_extractor_bart.coverage" NAME="_breach_extractor_bart Coverage Results" MODIFIED="1763474101241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
     <SUITE FILE_PATH="coverage/ThreatLens$_sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad.coverage" NAME="_sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad Coverage Results" MODIFIED="1763545350259" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
+    <SUITE FILE_PATH="coverage/ThreatLens$_model_training.coverage" NAME="_model_training Coverage Results" MODIFIED="1763742823378" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/_Website_Classification_Models" />
     <SUITE FILE_PATH="coverage/ThreatLens$_spacy_dept_finder.coverage" NAME="_spacy_dept_finder Coverage Results" MODIFIED="1763477051165" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
     <SUITE FILE_PATH="coverage/ThreatLens$Main.coverage" NAME="Main_process_URLs Coverage Results" MODIFIED="1755111887666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Website_Classification" />
     <SUITE FILE_PATH="coverage/ThreatLens$_breach_extractor.coverage" NAME="_breach_extractor Coverage Results" MODIFIED="1763473887155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
