@@ -142,7 +142,8 @@ class SpacyDepartmentExtractor:
                 "medical", "clinical", "healthcare", "health services", "patient care",
                 "nursing", "physician", "doctor", "nurse", "medical records",
                 "patient services", "radiology", "pharmacy", "laboratory services",
-                "emergency", "surgery", "outpatient", "inpatient"
+                "emergency", "surgery", "outpatient", "inpatient", "cardiac", "vascular",
+                "care", "cardiology", "heart", "vascular care"
             ],
 
             # Retail & Store Operations
