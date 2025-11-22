@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79b9d086-a9b6-421c-b4b7-108793673c01" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_rhysida_prompt" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/rhym_scnd_drill.py" afterDir="false" />
@@ -79,6 +80,7 @@
     "Python._breach_dept_extractor_gemini.executor": "Run",
     "Python._breach_extractor.executor": "Run",
     "Python._breach_extractor_bart.executor": "Run",
+    "Python._category_classifier.executor": "Run",
     "Python._country_extractor.executor": "Run",
     "Python._industry_extractor.executor": "Run",
     "Python._model_training.executor": "Run",
@@ -95,6 +97,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "__classification__model__updation",
     "git-widget-placeholder": "__rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad__script",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "/home/ibrahim-sayys/Projects/ThreatLens/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS",
@@ -113,6 +116,30 @@
       <recent name="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     </key>
   </component>
+  <component name="RunManager" selected="Python._category_classifier">
+    <configuration name="_5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ThreatLens" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
   <component name="RunManager" selected="Python._model_training">
     <configuration name="_5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
@@ -137,7 +164,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="_country_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="_category_classifier" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -146,12 +173,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/_Website_classificatio_v1" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/_Website_classificatio_v1/_category_classifier.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -183,6 +210,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="_country_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
     <configuration name="_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
@@ -197,6 +225,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -275,11 +304,14 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Doctests in _country_extractor" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
     <configuration name="rhym_scnd_drill" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
@@ -289,6 +321,13 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/rhym_scnd_drill.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -300,6 +339,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python._category_classifier" />
+        <item itemvalue="Python._sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad" />
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python._5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid" />
+        <item itemvalue="Python._country_extractor" />
         <item itemvalue="Python._model_training" />
         <item itemvalue="Python.rhym_scnd_drill" />
         <item itemvalue="Python._rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad" />
