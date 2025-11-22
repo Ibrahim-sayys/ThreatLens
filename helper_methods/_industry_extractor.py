@@ -75,6 +75,9 @@ class IndustryClassifier:
             "medical": "Healthcare and Medical",
             "hospital": "Healthcare and Medical",
             "clinic": "Healthcare and Medical",
+            "cardiac": "Healthcare and Medical",
+            "vascular": "Healthcare and Medical",
+            "care": "Healthcare and Medical",
             "pharma": "Pharmaceuticals",
             "pharmaceutical": "Pharmaceuticals",
             "drug": "Pharmaceuticals",
@@ -143,7 +146,7 @@ class IndustryClassifier:
     def _classify_by_keywords(self, text):
         """Fallback classification using keyword matching"""
         if not text or not isinstance(text, str):
-            return "Unknown"
+            return "Generic"
 
         text_lower = text.lower()
         scores = {}
@@ -159,7 +162,7 @@ class IndustryClassifier:
             # Return industry with highest keyword matches
             return max(scores, key=scores.get)
         else:
-            return "Unknown"
+            return "Generic"
 
     def get_industry(self, text):
         """
@@ -172,7 +175,7 @@ class IndustryClassifier:
             str: Single industry name
         """
         if not text or not isinstance(text, str):
-            return "Unknown"
+            return "Generic"
 
         if self.use_ai:
             try:
@@ -195,7 +198,7 @@ class IndustryClassifier:
             tuple: (industry_name, confidence_score)
         """
         if not text or not isinstance(text, str):
-            return ("Unknown", 0.0)
+            return ("Generic", 0.0)
 
         if self.use_ai:
             try:

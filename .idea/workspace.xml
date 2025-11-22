@@ -6,6 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="79b9d086-a9b6-421c-b4b7-108793673c01" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_rhysida_prompt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/rhym_scnd_drill.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/threat_intelligence_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/threat_intelligence_data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_Website_Classification_Models/_model_training.py" beforeDir="false" afterPath="$PROJECT_DIR$/_Website_Classification_Models/_model_training.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_Website_Classification_Models/catboost_info/catboost_training.json" beforeDir="false" afterPath="$PROJECT_DIR$/_Website_Classification_Models/catboost_info/catboost_training.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_Website_Classification_Models/catboost_info/learn/events.out.tfevents" beforeDir="false" afterPath="$PROJECT_DIR$/_Website_Classification_Models/catboost_info/learn/events.out.tfevents" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_Website_Classification_Models/catboost_info/time_left.tsv" beforeDir="false" afterPath="$PROJECT_DIR$/_Website_Classification_Models/catboost_info/time_left.tsv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_Website_Classification_Models/model_performance_summary.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/_Website_Classification_Models/model_performance_summary.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper_methods/_breach_dept.py" beforeDir="false" afterPath="$PROJECT_DIR$/helper_methods/_breach_dept.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper_methods/_industry_extractor.py" beforeDir="false" afterPath="$PROJECT_DIR$/helper_methods/_industry_extractor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,18 +84,21 @@
     "Python._country_extractor.executor": "Run",
     "Python._industry_extractor.executor": "Run",
     "Python._model_training.executor": "Run",
+    "Python._rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad.executor": "Run",
     "Python._sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad.executor": "Run",
     "Python._spacy_dept_finder.executor": "Run",
     "Python.check.executor": "Run",
     "Python.general_scrapper.executor": "Run",
     "Python.imp_stuff_extractor.executor": "Run",
     "Python.main.executor": "Run",
+    "Python.rhym_scnd_drill.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "__classification__model__updation",
+    "git-widget-placeholder": "__rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad__script",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "/home/ibrahim-sayys/Projects/ThreatLens/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS",
     "node.js.detected.package.eslint": "true",
@@ -125,6 +140,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+  <component name="RunManager" selected="Python._model_training">
     <configuration name="_5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
@@ -171,7 +187,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="_country_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="_model_training" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,12 +196,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/_Website_Classification_Models" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/_Website_Classification_Models/_model_training.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -195,6 +211,7 @@
       <method v="2" />
     </configuration>
     <configuration name="_country_extractor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -203,12 +220,13 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/helper_methods/_country_extractor.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/_rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -287,12 +305,18 @@
       <method v="2" />
     </configuration>
     <configuration name="Doctests in _country_extractor" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
+    <configuration name="rhym_scnd_drill" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThreatLens" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/helper_methods" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -304,6 +328,13 @@
       <option name="TEST_TYPE" value="TEST_SCRIPT" />
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts/rhym_scnd_drill.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -313,6 +344,11 @@
         <item itemvalue="Python.main" />
         <item itemvalue="Python._5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid" />
         <item itemvalue="Python._country_extractor" />
+        <item itemvalue="Python._model_training" />
+        <item itemvalue="Python.rhym_scnd_drill" />
+        <item itemvalue="Python._rhysidafohrhyy2aszi7bm32tnjat5xri65fopcxkdfxhi4tidsg7cad" />
+        <item itemvalue="Python._sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad" />
+        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -350,6 +386,8 @@
       <workItem from="1763312038851" duration="352000" />
       <workItem from="1763365283673" duration="14431000" />
       <workItem from="1763538360102" duration="6033000" />
+      <workItem from="1763554031163" duration="11659000" />
+      <workItem from="1763569780102" duration="13808000" />
     </task>
     <servers />
   </component>
@@ -380,7 +418,6 @@
     <SUITE FILE_PATH="coverage/ThreatLens$general_scrapper.coverage" NAME="general_scrapper Coverage Results" MODIFIED="1762924238466" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     <SUITE FILE_PATH="coverage/ThreatLens$main.coverage" NAME="main Coverage Results" MODIFIED="1763538168624" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS" />
     <SUITE FILE_PATH="coverage/ThreatLens$rhym_scnd_drill.coverage" NAME="rhym_scnd_drill Coverage Results" MODIFIED="1763632622438" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
-    <SUITE FILE_PATH="coverage/ThreatLens$_category_classifier.coverage" NAME="_category_classifier Coverage Results" MODIFIED="1763754758479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/_Website_classificatio_v1" />
     <SUITE FILE_PATH="coverage/ThreatLens$_breach_extractor_bart.coverage" NAME="_breach_extractor_bart Coverage Results" MODIFIED="1763474101241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/helper_methods" />
     <SUITE FILE_PATH="coverage/ThreatLens$_sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad.coverage" NAME="_sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad Coverage Results" MODIFIED="1763545350259" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/Custom_Scripts" />
     <SUITE FILE_PATH="coverage/ThreatLens$_model_training.coverage" NAME="_model_training Coverage Results" MODIFIED="1763742823378" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/_Website_Classification_Models" />

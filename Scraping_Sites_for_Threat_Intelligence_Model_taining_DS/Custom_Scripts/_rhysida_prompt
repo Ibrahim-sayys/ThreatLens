@@ -1,0 +1,60 @@
+when u open the site u will see:
+<p class="position-relative bg-secondary text-white py-2 px-4 rounded mt-2 border border-secondary" style="width: fit-content; left: 75%; cursor: pointer; top: -58px;" id="companies_online">229 Companies</p>
+click on this button it will open a window on the screen which will contain:
+<div class="border m-2 p-2">
+					<div class="row m-2">
+						<div class="col-2 text-center position-relative">
+							<img src="/logos/logo237.jpg" width="100" class="d-inline-block align-top rounded m-2" alt="logo">
+													</div>
+						<div class="col-10">
+							<div class="m-2 h4"><a href="https://www.heartsouthpc.com" target="_blank" class="">Heart South Cardiovascular Group</a></div>
+							<div class="m-2">Heart South is a leading provider of comprehensive cardiac and vascular care in Central Alabama.</div>
+															<div class="m-2">
+									<p>
+																					<a href="http://rhysidak3albqccbw3rnvjygzjyapal3c2y2zuix755extjalabkviyd.onion/G3pHDUKZPa5yo9UbPJ7NljV1ZCex9hgu/" target="_blank" class="">Documents</a>
+																															Data Catalog: 119 Gb, 305 682 Files
+																			</p>
+									<div class="progress">
+										<div class="progress-bar bg-secondary" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">20%</div>
+									</div>
+									<p>
+																					Not sold data was uploaded, data hunters, enjoy
+																			</p>
+								</div>
+														<button type="button" class="btn btn-secondary" data-company="228">More</button>
+													</div>
+					</div>
+				</div>
+
+			from this get the href from <a href="https://www.heartsouthpc.com" target="_blank" class="">Heart South Cardiovascular Group</a> and store in website field
+			from this <button type="button" class="btn btn-secondary" data-company="228">More</button> click it it will open another window on the page and from which u need to get the following data:
+			from <p>Heart South is a leading provider of comprehensive cardiac and vascular care in Central Alabama.</p> store it in m_content field
+			from <p>
+																						<a href="http://rhysidalpxnejirgq5iqkryy3lbpm7vuqd4khj7tvkme2b7y3d5srpqd.onion/WK3Vt7CMnrMeCeWqCoalS0U4BHQEbf8u/" target="_blank" class="">Documents (part 1)</a>
+																							<a href="http://rhysidalpxnejirgq5iqkryy3lbpm7vuqd4khj7tvkme2b7y3d5srpqd.onion/VCtMrTiPskkztk5QB1iE569rGEEPAuhW/" target="_blank" class="">Documents (part 2)</a>
+																							<a href="http://rhysidalpxnejirgq5iqkryy3lbpm7vuqd4khj7tvkme2b7y3d5srpqd.onion/pPM0zhY5fjZ6ctGGlSjOeFWydLAZd96v/" target="_blank" class="">Documents (part 3)</a>
+																							<a href="http://rhysidalpxnejirgq5iqkryy3lbpm7vuqd4khj7tvkme2b7y3d5srpqd.onion/FjNUmxMDhzXmNGOtvsVynQf94RyFqF46/" target="_blank" class="">Documents (part 4)</a>
+																							<a href="http://rhysidalpxnejirgq5iqkryy3lbpm7vuqd4khj7tvkme2b7y3d5srpqd.onion/8yGQeW4wL0fwsmfJGj1LF3rLPCkcncxX/" target="_blank" class="">Documents (part 5)</a>
+																							<a href="http://rhysidalpxnejirgq5iqkryy3lbpm7vuqd4khj7tvkme2b7y3d5srpqd.onion/F6B0hPqnZynoeTwiNqGWZLHIefHDRrq5/" target="_blank" class="">Documents (part 6)</a>
+																																Data Catalog: 3,9 Tb, 2 742 052 Files
+																			</p> get the hrefs in download links field and the text pass it to data_size normalizer and get the data size from it and store the result in data size field
+																			from <div class="row m-2">
+																	<div class="col">
+										<img src="/images/233/001.jpg" class="align-top rounded m-2" alt="image" style="max-width: 100%; cursor: pointer;">
+									</div>
+																	<div class="col">
+										<img src="/images/233/002.jpg" class="align-top rounded m-2" alt="image" style="max-width: 100%; cursor: pointer;">
+									</div>
+																	<div class="col">
+										<img src="/images/233/003.jpg" class="align-top rounded m-2" alt="image" style="max-width: 100%; cursor: pointer;">
+									</div>
+																	<div class="col">
+										<img src="/images/233/004.jpg" class="align-top rounded m-2" alt="image" style="max-width: 100%; cursor: pointer;">
+									</div>
+																	<div class="col">
+										<img src="/images/233/005.jpg" class="align-top rounded m-2" alt="image" style="max-width: 100%; cursor: pointer;">
+									</div>
+															</div>
+															get all the img hrefs store in image links field
+
+do that for all the companies listed in the window that opened after clicking on 229 Companies button

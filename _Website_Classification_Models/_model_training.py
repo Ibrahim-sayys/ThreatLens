@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')  # Set non-interactive backend
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
@@ -105,7 +107,10 @@ def evaluate_model(classifier, X_test, y_test, model_filename, save_model, label
     cm = confusion_matrix(y_test, y_pred)
     ConfusionMatrixDisplay(confusion_matrix=cm).plot(cmap=plt.cm.Blues, xticks_rotation=45)
     plt.title("Confusion Matrix")
-    plt.show()
+    # Save the plot instead of showing it
+    plt.savefig(f"{model_prefix}_{balancing_choice}_confusion_matrix.png")
+    print(f"Confusion matrix saved as {model_prefix}_{balancing_choice}_confusion_matrix.png")
+    plt.close()  # Close the figure to free memory
 
     if save_model:
         joblib.dump(classifier, model_filename)
@@ -173,7 +178,7 @@ def model_sgb():
 
 
 if __name__ == "__main__":
-    input_csv = "/home/ibrahim_sayys/PycharmProjects/FYP/ThreatLens/Dataset_Generation_from_urls/output_keywords.csv"
+    input_csv = "/home/ibrahim-sayys/Projects/ThreatLens/Dataset_Generation_from_urls/output_keywords.csv"
 
     while True:
         print("\nWhich option do you want?")
