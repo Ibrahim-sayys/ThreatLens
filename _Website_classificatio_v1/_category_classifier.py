@@ -13,9 +13,17 @@ from datetime import datetime
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image, KeepTogether
 from reportlab.lib.units import inch
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from io import BytesIO
+import os
+
+# Set high DPI for all matplotlib figures
+plt.rcParams['figure.dpi'] = 300
+plt.rcParams['savefig.dpi'] = 300
 
 
 # --------------------------------------------
@@ -81,6 +89,128 @@ def preprocess_data(input_csv):
 
 
 # --------------------------------------------
+# VISUALIZATION FUNCTIONS
+# --------------------------------------------
+def create_confusion_matrix_image(conf_matrix, class_names, model_name, technique):
+    """Create high-quality confusion matrix heatmap and save as image"""
+    # Adjust figure size based on number of classes
+    fig_size = max(8, len(class_names) * 0.8)
+    plt.figure(figsize=(fig_size, fig_size))
+
+    # Create heatmap
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
+                xticklabels=class_names, yticklabels=class_names,
+                cbar_kws={'label': 'Count'}, linewidths=0.5, linecolor='gray',
+                annot_kws={'size': 10})
+
+    plt.title(f'Confusion Matrix - {model_name}\n({technique})', fontsize=14, fontweight='bold', pad=15)
+    plt.ylabel('True Label', fontsize=11, fontweight='bold')
+    plt.xlabel('Predicted Label', fontsize=11, fontweight='bold')
+    plt.xticks(rotation=45, ha='right', fontsize=9)
+    plt.yticks(rotation=0, fontsize=9)
+    plt.tight_layout()
+
+    # Save to file with 300 DPI
+    filename = f"cm_{model_name.replace(' ', '_')}_{technique.replace(' ', '_')}.png"
+    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+    return filename
+
+
+def create_classification_report_image(class_report, class_names, model_name, technique):
+    """Create classification report as a table image"""
+    # Adjust figure size based on number of classes
+    fig_height = max(6, len(class_names) * 0.4 + 2)
+    fig, ax = plt.subplots(figsize=(11, fig_height))
+    ax.axis('tight')
+    ax.axis('off')
+
+    # Prepare data for table
+    table_data = [['Class', 'Precision', 'Recall', 'F1-Score', 'Support']]
+
+    for i, class_name in enumerate(class_names):
+        class_key = str(i)
+        if class_key in class_report:
+            metrics = class_report[class_key]
+            table_data.append([
+                class_name,
+                f"{metrics['precision']:.4f}",
+                f"{metrics['recall']:.4f}",
+                f"{metrics['f1-score']:.4f}",
+                f"{int(metrics['support'])}"
+            ])
+
+    # Add separator
+    table_data.append(['---', '---', '---', '---', '---'])
+
+    # Add macro average
+    table_data.append([
+        'Macro Avg',
+        f"{class_report['macro avg']['precision']:.4f}",
+        f"{class_report['macro avg']['recall']:.4f}",
+        f"{class_report['macro avg']['f1-score']:.4f}",
+        f"{int(class_report['macro avg']['support'])}"
+    ])
+
+    # Add weighted average
+    table_data.append([
+        'Weighted Avg',
+        f"{class_report['weighted avg']['precision']:.4f}",
+        f"{class_report['weighted avg']['recall']:.4f}",
+        f"{class_report['weighted avg']['f1-score']:.4f}",
+        f"{int(class_report['weighted avg']['support'])}"
+    ])
+
+    # Create table
+    table = ax.table(cellText=table_data, cellLoc='center', loc='center',
+                     colWidths=[0.35, 0.15, 0.15, 0.15, 0.15])
+
+    table.auto_set_font_size(False)
+    table.set_fontsize(9)
+    table.scale(1, 1.8)
+
+    # Style header row
+    for i in range(5):
+        cell = table[(0, i)]
+        cell.set_facecolor('#3498DB')
+        cell.set_text_props(weight='bold', color='white')
+
+    # Style average rows
+    for i in range(5):
+        cell = table[(len(table_data) - 2, i)]
+        cell.set_facecolor('#E8F8F5')
+        cell.set_text_props(weight='bold')
+
+        cell = table[(len(table_data) - 1, i)]
+        cell.set_facecolor('#D5F4E6')
+        cell.set_text_props(weight='bold')
+
+    # Style separator row
+    for i in range(5):
+        cell = table[(len(table_data) - 3, i)]
+        cell.set_facecolor('#BDC3C7')
+
+    # Alternate row colors for class rows
+    for row in range(1, len(class_names) + 1):
+        for col in range(5):
+            if row % 2 == 0:
+                table[(row, col)].set_facecolor('#F8F9F9')
+            else:
+                table[(row, col)].set_facecolor('#FFFFFF')
+
+    plt.title(f'Classification Report - {model_name}\n({technique})',
+              fontsize=13, fontweight='bold', pad=15)
+
+    # Save to file with 300 DPI
+    filename = f"cr_{model_name.replace(' ', '_')}_{technique.replace(' ', '_')}.png"
+    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+    return filename
+
+
+# --------------------------------------------
 # EVALUATION
 # --------------------------------------------
 def evaluate_model(classifier, X_test, y_test, label_encoder):
@@ -103,7 +233,7 @@ def evaluate_model(classifier, X_test, y_test, label_encoder):
 # --------------------------------------------
 # TRAINING WITH BOTH BALANCING TECHNIQUES
 # --------------------------------------------
-def train_model_both_techniques(X, y, classifier_class, classifier_params, model_name):
+def train_model_both_techniques(X, y, classifier_class, classifier_params, model_name, label_encoder):
     """Train model with both SMOTE and Random Oversampling"""
     print(f"\n{'=' * 60}")
     print(f"Training {model_name}...")
@@ -132,20 +262,41 @@ def train_model_both_techniques(X, y, classifier_class, classifier_params, model
         clf.fit(X_train_balanced, y_train_balanced)
 
         # Evaluate
-        metrics = evaluate_model(clf, X_test, y_test, None)
+        metrics = evaluate_model(clf, X_test, y_test, label_encoder)
 
         print(f"Accuracy with {technique}: {metrics['accuracy']:.4f}")
 
+        # Generate visualizations
+        class_names = label_encoder.classes_
+
+        print(f"Generating confusion matrix image...")
+        cm_image = create_confusion_matrix_image(
+            metrics['confusion_matrix'],
+            class_names,
+            model_name,
+            technique
+        )
+
+        print(f"Generating classification report image...")
+        cr_image = create_classification_report_image(
+            metrics['classification_report'],
+            class_names,
+            model_name,
+            technique
+        )
+
         results[technique] = {
             'classifier': clf,
-            'metrics': metrics
+            'metrics': metrics,
+            'cm_image': cm_image,
+            'cr_image': cr_image
         }
 
     return results
 
 
 # --------------------------------------------
-# PDF REPORT GENERATOR
+# PDF REPORT GENERATOR WITH IMAGES
 # --------------------------------------------
 def create_pdf_report(all_results, label_encoder, output_filename="model_comparison_report.pdf"):
     """Create PDF report comparing all models with both balancing techniques"""
@@ -153,7 +304,14 @@ def create_pdf_report(all_results, label_encoder, output_filename="model_compari
     print("Generating PDF Report...")
     print("=" * 60)
 
-    doc = SimpleDocTemplate(output_filename, pagesize=A4)
+    doc = SimpleDocTemplate(
+        output_filename,
+        pagesize=A4,
+        topMargin=0.5 * inch,
+        bottomMargin=0.5 * inch,
+        leftMargin=0.75 * inch,
+        rightMargin=0.75 * inch
+    )
     elements = []
     styles = getSampleStyleSheet()
 
@@ -161,9 +319,9 @@ def create_pdf_report(all_results, label_encoder, output_filename="model_compari
     title_style = ParagraphStyle(
         'CustomTitle',
         parent=styles['Heading1'],
-        fontSize=24,
+        fontSize=22,
         textColor=colors.HexColor('#2C3E50'),
-        spaceAfter=30,
+        spaceAfter=20,
         alignment=1  # Center
     )
 
@@ -176,10 +334,10 @@ def create_pdf_report(all_results, label_encoder, output_filename="model_compari
         styles['Normal']
     )
     elements.append(timestamp)
-    elements.append(Spacer(1, 0.3 * inch))
+    elements.append(Spacer(1, 0.2 * inch))
 
     # Summary Table
-    summary_data = [['Model', 'Balancing Technique', 'Accuracy', 'Precision', 'Recall', 'F1-Score']]
+    summary_data = [['Model', 'Balancing', 'Accuracy', 'Precision', 'Recall', 'F1-Score']]
 
     for model_name, techniques in all_results.items():
         for technique, data in techniques.items():
@@ -191,9 +349,12 @@ def create_pdf_report(all_results, label_encoder, output_filename="model_compari
             recall = report['weighted avg']['recall']
             f1 = report['weighted avg']['f1-score']
 
+            # Shorten technique name for table
+            technique_short = "SMOTE" if technique == "SMOTE" else "Random OS"
+
             summary_data.append([
                 model_name,
-                technique,
+                technique_short,
                 f"{metrics['accuracy']:.4f}",
                 f"{precision:.4f}",
                 f"{recall:.4f}",
@@ -201,115 +362,90 @@ def create_pdf_report(all_results, label_encoder, output_filename="model_compari
             ])
 
     summary_table = Table(summary_data,
-                          colWidths=[1.5 * inch, 1.5 * inch, 0.8 * inch, 0.8 * inch, 0.8 * inch, 0.8 * inch])
+                          colWidths=[1.4 * inch, 1.0 * inch, 0.9 * inch, 0.9 * inch, 0.9 * inch, 0.9 * inch])
     summary_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#3498DB')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('FONTSIZE', (0, 0), (-1, 0), 9),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ('FONTSIZE', (0, 1), (-1, -1), 8),
+        ('FONTSIZE', (0, 1), (-1, -1), 7),
     ]))
 
     elements.append(Paragraph("<b>Performance Summary</b>", styles['Heading2']))
-    elements.append(Spacer(1, 0.2 * inch))
+    elements.append(Spacer(1, 0.15 * inch))
     elements.append(summary_table)
     elements.append(PageBreak())
 
-    # Detailed reports for each model
+    # Detailed reports for each model WITH IMAGES
     for model_name, techniques in all_results.items():
         elements.append(Paragraph(f"<b>{model_name}</b>", styles['Heading2']))
-        elements.append(Spacer(1, 0.2 * inch))
+        elements.append(Spacer(1, 0.15 * inch))
 
         for technique, data in techniques.items():
             metrics = data['metrics']
-            report = metrics['classification_report']
-            conf_matrix = metrics['confusion_matrix']
 
-            elements.append(Paragraph(f"<b>Balancing Technique: {technique}</b>", styles['Heading3']))
-            elements.append(Spacer(1, 0.1 * inch))
-
-            # Accuracy
+            elements.append(Paragraph(f"<b>Balancing: {technique}</b>", styles['Heading3']))
             elements.append(Paragraph(f"<b>Accuracy:</b> {metrics['accuracy']:.4f}", styles['Normal']))
             elements.append(Spacer(1, 0.1 * inch))
 
-            # Classification Report Table
-            class_data = [['Class', 'Precision', 'Recall', 'F1-Score', 'Support']]
+            # Classification Report Image with smart sizing
+            elements.append(Paragraph("<b>Classification Report:</b>", styles['Heading4']))
+            elements.append(Spacer(1, 0.05 * inch))
 
-            for class_label, class_metrics in report.items():
-                if class_label not in ['accuracy', 'macro avg', 'weighted avg']:
-                    class_name = label_encoder.inverse_transform([int(class_label)])[
-                        0] if class_label.isdigit() else class_label
-                    class_data.append([
-                        str(class_name),
-                        f"{class_metrics['precision']:.4f}",
-                        f"{class_metrics['recall']:.4f}",
-                        f"{class_metrics['f1-score']:.4f}",
-                        str(int(class_metrics['support']))
-                    ])
+            # Calculate appropriate size to fit on page (max 5.5 inches height)
+            cr_img = Image(data['cr_image'])
+            aspect_ratio = cr_img.imageWidth / cr_img.imageHeight
 
-            # Add averages
-            class_data.append(['Macro Avg',
-                               f"{report['macro avg']['precision']:.4f}",
-                               f"{report['macro avg']['recall']:.4f}",
-                               f"{report['macro avg']['f1-score']:.4f}",
-                               str(int(report['macro avg']['support']))])
-            class_data.append(['Weighted Avg',
-                               f"{report['weighted avg']['precision']:.4f}",
-                               f"{report['weighted avg']['recall']:.4f}",
-                               f"{report['weighted avg']['f1-score']:.4f}",
-                               str(int(report['weighted avg']['support']))])
+            # Set width and calculate height maintaining aspect ratio
+            img_width = 5.5 * inch
+            img_height = img_width / aspect_ratio
 
-            class_table = Table(class_data, colWidths=[2 * inch, 1 * inch, 1 * inch, 1 * inch, 1 * inch])
-            class_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2ECC71')),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 9),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                ('FONTSIZE', (0, 1), (-1, -1), 8),
-            ]))
+            # If height is too large, scale down
+            if img_height > 4.5 * inch:
+                img_height = 4.5 * inch
+                img_width = img_height * aspect_ratio
 
-            elements.append(class_table)
+            cr_img.drawWidth = img_width
+            cr_img.drawHeight = img_height
+            cr_img.hAlign = 'CENTER'
+            elements.append(cr_img)
+            elements.append(Spacer(1, 0.15 * inch))
+
+            # Confusion Matrix Image with smart sizing
+            elements.append(Paragraph("<b>Confusion Matrix:</b>", styles['Heading4']))
+            elements.append(Spacer(1, 0.05 * inch))
+
+            cm_img = Image(data['cm_image'])
+            cm_aspect_ratio = cm_img.imageWidth / cm_img.imageHeight
+
+            # Set dimensions for confusion matrix (slightly smaller)
+            cm_width = 4.5 * inch
+            cm_height = cm_width / cm_aspect_ratio
+
+            if cm_height > 4.5 * inch:
+                cm_height = 4.5 * inch
+                cm_width = cm_height * cm_aspect_ratio
+
+            cm_img.drawWidth = cm_width
+            cm_img.drawHeight = cm_height
+            cm_img.hAlign = 'CENTER'
+            elements.append(cm_img)
             elements.append(Spacer(1, 0.2 * inch))
-
-            # Confusion Matrix
-            elements.append(Paragraph("<b>Confusion Matrix:</b>", styles['Normal']))
-            elements.append(Spacer(1, 0.1 * inch))
-
-            # Create confusion matrix table
-            cm_data = [[''] + [f'Pred {i}' for i in range(len(conf_matrix))]]
-            for i, row in enumerate(conf_matrix):
-                cm_data.append([f'True {i}'] + [str(val) for val in row])
-
-            cm_table = Table(cm_data)
-            cm_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                ('BACKGROUND', (0, 0), (0, -1), colors.grey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('TEXTCOLOR', (0, 0), (0, -1), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, -1), 8),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                ('BACKGROUND', (1, 1), (-1, -1), colors.lightblue),
-            ]))
-
-            elements.append(cm_table)
-            elements.append(Spacer(1, 0.3 * inch))
 
         elements.append(PageBreak())
 
     # Build PDF
-    doc.build(elements)
-    print(f"\n✓ PDF Report saved as: {output_filename}")
+    try:
+        doc.build(elements)
+        print(f"\n✓ PDF Report saved as: {output_filename}")
+        print(f"✓ All confusion matrix and classification report images saved at 300 DPI")
+    except Exception as e:
+        print(f"\n✗ Error building PDF: {e}")
+        print("Images have been saved successfully. You can view them individually.")
 
 
 # --------------------------------------------
@@ -377,7 +513,7 @@ if __name__ == "__main__":
     all_results = {}
 
     for model_name, (clf_class, params, model_prefix) in selected_models.items():
-        results = train_model_both_techniques(X, y, clf_class, params, model_name)
+        results = train_model_both_techniques(X, y, clf_class, params, model_name, label_encoder)
         all_results[model_name] = results
 
         # Save models if requested
