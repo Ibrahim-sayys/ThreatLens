@@ -70,6 +70,7 @@ class JSONDataParser:
         12: ('m_leak_date', 'Leak date'),
         13: ('m_revenue', 'Company revenue'),
         14: ('m_data_size', 'Data size'),
+        15: ('m_logo_or_images', 'Logo or images associated with the data'),
     }
 
     def __init__(self, json_file_path: str, selected_fields: List[str] = None):
