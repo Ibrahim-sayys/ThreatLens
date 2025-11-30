@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}About - ThreatLens{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="terminal-text" style="margin-bottom: 2rem;">About ThreatLens</h1>
+
+    <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1rem;">Our Mission</h2>
+        <p style="color: var(--text-muted); line-height: 1.8; font-size: 1.1rem;">
+            ThreatLens aims to provide advanced threat detection capabilities through machine learning,
+            helping security researchers and organizations identify potential data leaks and security
+            threats across the web. Our system leverages cutting-edge ML algorithms to analyze and
+            classify websites with high accuracy.
+        </p>
+    </div>
+
+    <h2 class="terminal-text" style="margin-bottom: 2rem;">Key Features</h2>
+
+    <div class="card-grid">
+        <div class="card">
+            <div class="card-icon">🤖</div>
+            <h3>Multiple ML Models</h3>
+            <p>
+                Choose from various machine learning models including Naive Bayes, XGBoost, CatBoost,
+                Random Forest, and Gradient Boosting for accurate classification.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">⚡</div>
+            <h3>Fast Processing</h3>
+            <p>
+                Quick analysis and classification of websites with efficient keyword extraction
+                and model inference capabilities.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">📊</div>
+            <h3>Batch Processing</h3>
+            <p>
+                Upload CSV or Excel files to analyze multiple URLs at once, perfect for
+                large-scale threat intelligence operations.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🔐</div>
+            <h3>Tor Support</h3>
+            <p>
+                Built-in Tor proxy support for analyzing .onion sites and maintaining anonymity
+                during threat intelligence gathering.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🎯</div>
+            <h3>Keyword Extraction</h3>
+            <p>
+                Advanced NLP-based keyword extraction using NLTK to identify the most relevant
+                terms from analyzed websites.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">📈</div>
+            <h3>High Accuracy</h3>
+            <p>
+                Models trained using SMOTE (Synthetic Minority Over-sampling Technique) for
+                balanced and accurate predictions.
+            </p>
+        </div>
+    </div>
+
+    <div style="margin-top: 3rem; background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem;">
+        <h2 class="terminal-text" style="margin-bottom: 1rem;">How Classification Works</h2>
+
+        <div style="margin-top: 2rem;">
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; padding: 1rem; background: var(--accent-color);">
+                <div style="font-size: 2rem; font-weight: bold; color: var(--text-color);">1</div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Web Scraping</h4>
+                    <p style="color: var(--text-muted);">
+                        The system fetches the website content using HTTP requests (with optional Tor proxy)
+                        and extracts clean text from the HTML using BeautifulSoup.
+                    </p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; padding: 1rem; background: var(--accent-color);">
+                <div style="font-size: 2rem; font-weight: bold; color: var(--text-color);">2</div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Keyword Extraction</h4>
+                    <p style="color: var(--text-muted);">
+                        Using NLTK and natural language processing techniques, the system extracts the top 10
+                        most relevant keywords, filtering out common stop words.
+                    </p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; padding: 1rem; background: var(--accent-color);">
+                <div style="font-size: 2rem; font-weight: bold; color: var(--text-color);">3</div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Vectorization</h4>
+                    <p style="color: var(--text-muted);">
+                        Keywords are transformed into numerical features using pre-trained TF-IDF vectorizers
+                        specific to each machine learning model.
+                    </p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; padding: 1rem; background: var(--accent-color);">
+                <div style="font-size: 2rem; font-weight: bold; color: var(--text-color);">4</div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Classification</h4>
+                    <p style="color: var(--text-muted);">
+                        The selected ML model analyzes the vectorized features and predicts whether the site
+                        is related to "Leaks" or "Others" category.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 3rem; background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem;">
+        <h2 class="terminal-text" style="margin-bottom: 1rem;">Available Models</h2>
+        <ul style="color: var(--text-muted); line-height: 2; list-style: none;">
+            <li>🔹 <strong>Naive Bayes (SMOTE):</strong> Probabilistic classifier based on Bayes' theorem</li>
+            <li>🔹 <strong>XGBoost (SMOTE):</strong> Gradient boosting framework optimized for speed and performance</li>
+            <li>🔹 <strong>CatBoost (SMOTE):</strong> Gradient boosting library with categorical feature support</li>
+            <li>🔹 <strong>Random Forest (SMOTE):</strong> Ensemble learning method using multiple decision trees</li>
+            <li>🔹 <strong>Gradient Boosting (SMOTE):</strong> Traditional gradient boosting for classification</li>
+        </ul>
+    </div>
+
+    <div style="margin-top: 3rem; padding: 2rem; background: rgba(255, 170, 0, 0.1); border: 1px solid var(--warning-color);">
+        <h3 style="color: var(--warning-color); margin-bottom: 1rem;">⚠️ Disclaimer</h3>
+        <p style="color: var(--text-muted); line-height: 1.8;">
+            This tool is designed for educational and research purposes only. Users are responsible for ensuring
+            they have appropriate authorization before analyzing any websites. The developers of ThreatLens are
+            not responsible for any misuse of this system. Always respect privacy laws and website terms of service.
+        </p>
+    </div>
+</div>
+{% endblock %}

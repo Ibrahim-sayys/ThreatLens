@@ -1,0 +1,27 @@
+# ThreatLens Web Interface Requirements
+# Install with: pip install -r requirements.txt
+
+# Web Framework
+Flask==3.0.0
+Werkzeug==3.1.3
+
+# Data Processing
+pandas==2.2.3
+openpyxl==3.1.5
+
+# Web Scraping
+beautifulsoup4==4.12.2
+requests==2.31.0
+
+# Machine Learning
+scikit-learn==1.3.2
+joblib==1.3.2
+xgboost==2.0.3
+catboost==1.2.2
+
+# NLP
+nltk==3.8.1
+
+# Optional: For Tor proxy support
+# PySocks==1.7.1
+
