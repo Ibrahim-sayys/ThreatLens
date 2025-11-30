@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ThreatLens{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="logo">
+                <span class="logo-icon">🔒</span>
+                <span>ThreatLens</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a></li>
+                <li><a href="{{ url_for('classify') }}" {% if request.endpoint == 'classify' %}class="active"{% endif %}>Classify</a></li>
+                <li><a href="{{ url_for('orion') }}">Try Orion Intelligence</a></li>
+                <li><a href="{{ url_for('developers') }}" {% if request.endpoint == 'developers' %}class="active"{% endif %}>Developers</a></li>
+                <li><a href="{{ url_for('about') }}" {% if request.endpoint == 'about' %}class="active"{% endif %}>About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 ThreatLens - Website Classification System</p>
+        <p class="text-muted">Powered by Machine Learning & Threat Intelligence</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+

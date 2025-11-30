@@ -1,0 +1,321 @@
+import os
+import requests
+import pandas as pd
+from flask import Flask, render_template, request, jsonify, redirect
+from bs4 import BeautifulSoup
+import re
+from collections import Counter
+import joblib
+from nltk.corpus import stopwords
+import nltk
+from werkzeug.utils import secure_filename
+
+# Ensure stopwords are downloaded
+try:
+    stop_words = set(stopwords.words('english'))
+except LookupError:
+    nltk.download('stopwords')
+    stop_words = set(stopwords.words('english'))
+
+app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+app.config['UPLOAD_FOLDER'] = 'uploads'
+
+# Create uploads folder if it doesn't exist
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Base directory for models
+MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '_Website_classificatio_v1')
+
+# Model file mapping - using SMOTE versions
+MODEL_FILES = {
+    "naive_bayes": {
+        "name": "Naive Bayes (SMOTE)",
+        "model": os.path.join(MODEL_DIR, "naive_bayes_smote.pkl"),
+        "vectorizer": os.path.join(MODEL_DIR, "naive_bayes_vectorizer.pkl"),
+        "label_encoder": os.path.join(MODEL_DIR, "naive_bayes_label_encoder.pkl")
+    },
+    "xgboost": {
+        "name": "XGBoost (SMOTE)",
+        "model": os.path.join(MODEL_DIR, "xgboost_smote.pkl"),
+        "vectorizer": os.path.join(MODEL_DIR, "xgboost_vectorizer.pkl"),
+        "label_encoder": os.path.join(MODEL_DIR, "xgboost_label_encoder.pkl")
+    },
+    "catboost": {
+        "name": "CatBoost (SMOTE)",
+        "model": os.path.join(MODEL_DIR, "catboost_smote.pkl"),
+        "vectorizer": os.path.join(MODEL_DIR, "catboost_vectorizer.pkl"),
+        "label_encoder": os.path.join(MODEL_DIR, "catboost_label_encoder.pkl")
+    },
+    "random_forest": {
+        "name": "Random Forest (SMOTE)",
+        "model": os.path.join(MODEL_DIR, "random_forest_smote.pkl"),
+        "vectorizer": os.path.join(MODEL_DIR, "random_forest_vectorizer.pkl"),
+        "label_encoder": os.path.join(MODEL_DIR, "random_forest_label_encoder.pkl")
+    },
+    "gradient_boosting": {
+        "name": "Gradient Boosting (SMOTE)",
+        "model": os.path.join(MODEL_DIR, "gradient_boosting_smote.pkl"),
+        "vectorizer": os.path.join(MODEL_DIR, "gradient_boosting_vectorizer.pkl"),
+        "label_encoder": os.path.join(MODEL_DIR, "gradient_boosting_label_encoder.pkl")
+    }
+}
+
+# Load models at startup
+LOADED_MODELS = {}
+for key, paths in MODEL_FILES.items():
+    try:
+        LOADED_MODELS[key] = {
+            "name": paths["name"],
+            "model": joblib.load(paths["model"]),
+            "vectorizer": joblib.load(paths["vectorizer"]),
+            "label_encoder": joblib.load(paths["label_encoder"])
+        }
+        print(f"✓ Loaded {paths['name']}")
+    except Exception as e:
+        print(f"✗ Failed to load {paths['name']}: {e}")
+
+# Tor proxy settings (optional)
+PROXIES = {
+    'http': 'socks5h://127.0.0.1:9050',
+    'https': 'socks5h://127.0.0.1:9050',
+}
+
+def extract_text_from_html(html_content):
+    """Extract clean text from HTML content"""
+    soup = BeautifulSoup(html_content, 'html.parser')
+    for script_or_style in soup(['script', 'style']):
+        script_or_style.decompose()
+    full_text = soup.get_text(separator=' ')
+    clean_text = ' '.join(full_text.split())
+    return clean_text
+
+def extract_keywords(text, num_keywords=10):
+    """Extract top keywords from text"""
+    words = re.findall(r'\b[a-zA-Z]{4,}\b', text.lower())
+    filtered_words = [word for word in words if word not in stop_words]
+    word_counts = Counter(filtered_words)
+    return [word for word, _ in word_counts.most_common(num_keywords)]
+
+def classify_url(url, selected_model="xgboost", use_tor=False):
+    """Classify a single URL using the selected model"""
+    try:
+        if not url.startswith("http"):
+            url = "http://" + url
+
+        # Detect .onion URLs and require Tor
+        host = url.lower()
+        if ".onion" in host and not use_tor:
+            return {
+                "url": url,
+                "status": "error",
+                "message": "Detected a .onion address. Please turn the Tor proxy on and try again.",
+                "category": None,
+                "keywords": None
+            }
+
+        proxies = PROXIES if use_tor else None
+        timeout = 30 if use_tor else 10
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+
+        response = requests.get(url, proxies=proxies, timeout=timeout, headers=headers)
+
+        if response.status_code == 200:
+            html = response.text
+            text = extract_text_from_html(html)
+
+            if not text or len(text.strip()) < 10:
+                return {
+                    "url": url,
+                    "status": "error",
+                    "message": "Website contains little or no text to analyze",
+                    "category": None,
+                    "keywords": None
+                }
+
+            keywords = extract_keywords(text, num_keywords=10)
+            keywords_joined = ' '.join(keywords)
+
+            # Use the selected model
+            if selected_model not in LOADED_MODELS:
+                return {
+                    "url": url,
+                    "status": "error",
+                    "message": f"Model {selected_model} not available",
+                    "category": None,
+                    "keywords": None
+                }
+
+            model_info = LOADED_MODELS[selected_model]
+            vectorizer = model_info["vectorizer"]
+            model = model_info["model"]
+            label_encoder = model_info["label_encoder"]
+
+            X = vectorizer.transform([keywords_joined])
+            y_pred = model.predict(X)
+            category = label_encoder.inverse_transform(y_pred)[0]
+
+            return {
+                "url": url,
+                "status": "success",
+                "category": category,
+                "keywords": keywords,
+                "message": "Classification successful"
+            }
+        else:
+            return {
+                "url": url,
+                "status": "error",
+                "message": f"HTTP {response.status_code}",
+                "category": None,
+                "keywords": None
+            }
+
+    except requests.exceptions.ConnectionError:
+        # Special-case: .onion without Tor should already be handled above, but keep a helpful message
+        if ".onion" in url.lower() and not use_tor:
+            return {
+                "url": url,
+                "status": "error",
+                "message": "Detected a .onion address. Please turn the Tor proxy on and try again.",
+                "category": None,
+                "keywords": None
+            }
+        return {
+            "url": url,
+            "status": "error",
+            "message": "Connection failed",
+            "category": None,
+            "keywords": None
+        }
+    except requests.exceptions.Timeout:
+        return {
+            "url": url,
+            "status": "error",
+            "message": "Request timed out",
+            "category": None,
+            "keywords": None
+        }
+    except Exception as e:
+        return {
+            "url": url,
+            "status": "error",
+            "message": str(e),
+            "category": None,
+            "keywords": None
+        }
+
+@app.route("/")
+def index():
+    """Home page"""
+    return render_template("index.html")
+
+@app.route("/classify", methods=["GET", "POST"])
+def classify():
+    """URL Classification page"""
+    if request.method == "GET":
+        model_choices = [(key, info["name"]) for key, info in LOADED_MODELS.items()]
+        return render_template("classify.html", model_choices=model_choices)
+
+    # POST request - handle classification
+    data = request.get_json() if request.is_json else request.form
+    url = data.get("url", "").strip()
+    selected_model = data.get("model", "xgboost")
+    use_tor = data.get("use_tor", False)
+
+    if not url:
+        return jsonify({"error": "URL is required"}), 400
+
+    result = classify_url(url, selected_model, use_tor)
+
+    if request.is_json:
+        return jsonify(result)
+    else:
+        model_choices = [(key, info["name"]) for key, info in LOADED_MODELS.items()]
+        return render_template("classify.html",
+                             result=result,
+                             model_choices=model_choices,
+                             selected_model=selected_model)
+
+@app.route("/classify/batch", methods=["POST"])
+def classify_batch():
+    """Handle batch classification from CSV/Excel file"""
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
+    selected_model = request.form.get("model", "xgboost")
+    use_tor = request.form.get("use_tor") == "true"
+
+    try:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+
+        # Read file based on extension
+        if filename.endswith('.csv'):
+            df = pd.read_csv(filepath)
+        elif filename.endswith(('.xlsx', '.xls')):
+            df = pd.read_excel(filepath)
+        else:
+            return jsonify({"error": "Invalid file format. Use CSV or Excel"}), 400
+
+        # Find URL column (case insensitive)
+        url_column = None
+        for col in df.columns:
+            if col.lower() in ['url', 'urls', 'website', 'link']:
+                url_column = col
+                break
+
+        if url_column is None:
+            return jsonify({"error": "No URL column found. Column should be named 'url', 'urls', 'website', or 'link'"}), 400
+
+        urls = df[url_column].dropna().tolist()
+
+        if len(urls) == 0:
+            return jsonify({"error": "No URLs found in file"}), 400
+
+        # Classify each URL
+        results = []
+        for url in urls[:50]:  # Limit to 50 URLs to prevent timeout
+            result = classify_url(url, selected_model, use_tor)
+            results.append(result)
+
+        # Clean up uploaded file
+        os.remove(filepath)
+
+        return jsonify({"results": results})
+
+    except Exception as e:
+        return jsonify({"error": f"Error processing file: {str(e)}"}), 500
+
+@app.route("/orion")
+def orion():
+    """Redirect to Orion Intelligence"""
+    return redirect("https://try.orionintelligence.org/login?redirect=%2Fdashboard%2Fhome")
+
+@app.route("/developers")
+def developers():
+    """Developers page"""
+    return render_template("developers.html")
+
+@app.route("/about")
+def about():
+    """About page"""
+    return render_template("about.html")
+
+if __name__ == "__main__":
+    print("\n" + "="*60)
+    print("🔒 ThreatLens - Website Classification System")
+    print("="*60)
+    print(f"\nLoaded {len(LOADED_MODELS)} models:")
+    for key, model in LOADED_MODELS.items():
+        print(f"  • {model['name']}")
+    print("\n" + "="*60 + "\n")
+    app.run(debug=True, host='0.0.0.0', port=5000)

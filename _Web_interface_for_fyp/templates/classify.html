@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Classify - ThreatLens{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="terminal-text" style="margin-bottom: 2rem;">Website Classification</h1>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <button class="btn btn-primary" id="singleUrlBtn" onclick="showSingleUrl()">Single URL</button>
+        <button class="btn" id="batchUrlBtn" onclick="showBatchUrl()">Batch Upload</button>
+    </div>
+
+    <!-- Single URL Form -->
+    <div id="singleUrlForm">
+        <form method="POST" id="classifyForm">
+            <div class="form-group">
+                <label for="url">Enter URL</label>
+                <input type="text" id="url" name="url" class="form-control" placeholder="https://example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="model">Select ML Model</label>
+                <select id="model" name="model" class="form-control">
+                    {% for key, name in model_choices %}
+                    <option value="{{ key }}" {% if selected_model == key %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="use_tor" name="use_tor" value="true">
+                    <span>Use Tor Proxy (for .onion sites)</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Classify URL</button>
+        </form>
+    </div>
+
+    <!-- Batch Upload Form -->
+    <div id="batchUploadForm" class="hidden">
+        <form id="batchForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="model_batch">Select ML Model</label>
+                <select id="model_batch" name="model" class="form-control">
+                    {% for key, name in model_choices %}
+                    <option value="{{ key }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="use_tor_batch" name="use_tor" value="true">
+                    <span>Use Tor Proxy (for .onion sites)</span>
+                </label>
+            </div>
+
+            <div class="file-upload" id="fileUploadArea">
+                <label for="fileInput" class="file-upload-label">
+                    <div style="font-size: 3rem;">📁</div>
+                    <div>Click to upload CSV or Excel file</div>
+                    <div class="text-muted" style="font-size: 0.9rem;">File should contain a column named "url", "urls", "website", or "link"</div>
+                    <div class="text-muted" style="font-size: 0.9rem;">Maximum 50 URLs per batch</div>
+                </label>
+                <input type="file" id="fileInput" name="file" accept=".csv,.xlsx,.xls" required>
+            </div>
+            <div id="fileName" class="text-center mt-2"></div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-2">Process Batch</button>
+        </form>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 1rem;" class="text-muted">Processing... This may take a moment</p>
+    </div>
+
+    <!-- Single Result Display -->
+    {% if result %}
+    <div class="result-box {% if result.status == 'success' %}success{% else %}error{% endif %}">
+        {% if result.status == 'success' %}
+        <div class="result-header">
+            <div>
+                <h3>Classification Result</h3>
+                <p class="result-url">{{ result.url }}</p>
+            </div>
+            <div class="result-category {% if result.category.lower() == 'leaks' %}category-leaks{% else %}category-others{% endif %}">
+                {{ result.category }}
+            </div>
+        </div>
+
+        {% if result.keywords %}
+        <div>
+            <h4 style="margin-bottom: 1rem;">Extracted Keywords:</h4>
+            <div class="keywords-list">
+                {% for keyword in result.keywords %}
+                <span class="keyword-tag">{{ keyword }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="alert alert-error">
+            <strong>Error:</strong> {{ result.message }}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Batch Results Display -->
+    <div id="batchResults" class="batch-results hidden"></div>
+</div>
+
+<script>
+function showSingleUrl() {
+    document.getElementById('singleUrlForm').classList.remove('hidden');
+    document.getElementById('batchUploadForm').classList.add('hidden');
+    document.getElementById('singleUrlBtn').classList.add('btn-primary');
+    document.getElementById('batchUrlBtn').classList.remove('btn-primary');
+    document.getElementById('batchResults').classList.add('hidden');
+}
+
+function showBatchUrl() {
+    document.getElementById('singleUrlForm').classList.add('hidden');
+    document.getElementById('batchUploadForm').classList.remove('hidden');
+    document.getElementById('batchUrlBtn').classList.add('btn-primary');
+    document.getElementById('singleUrlBtn').classList.remove('btn-primary');
+}
+
+// File upload handling
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || '';
+    document.getElementById('fileName').textContent = fileName ? `Selected: ${fileName}` : '';
+});
+
+// Single URL form submission
+document.getElementById('classifyForm').addEventListener('submit', function(e) {
+    document.getElementById('loading').classList.add('active');
+});
+
+// Batch form submission
+document.getElementById('batchForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    document.getElementById('loading').classList.add('active');
+    document.getElementById('batchResults').classList.add('hidden');
+
+    try {
+        const response = await fetch('/classify/batch', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+        document.getElementById('loading').classList.remove('active');
+
+        if (data.error) {
+            document.getElementById('batchResults').innerHTML = `
+                <div class="alert alert-error">
+                    <strong>Error:</strong> ${data.error}
+                </div>
+            `;
+            document.getElementById('batchResults').classList.remove('hidden');
+            return;
+        }
+
+        // Display results
+        let resultsHtml = '<h2 class="terminal-text" style="margin-bottom: 1rem;">Batch Results</h2>';
+        let successCount = 0;
+        let errorCount = 0;
+
+        data.results.forEach(result => {
+            const statusClass = result.status === 'success' ? 'success' : 'error';
+            if (result.status === 'success') successCount++;
+            else errorCount++;
+
+            resultsHtml += `
+                <div class="batch-result-item ${statusClass}">
+                    <div class="result-url">${result.url}</div>
+            `;
+
+            if (result.status === 'success') {
+                const categoryClass = result.category.toLowerCase() === 'leaks' ? 'category-leaks' : 'category-others';
+                resultsHtml += `
+                    <div style="margin-top: 0.5rem;">
+                        <strong>Category:</strong>
+                        <span class="${categoryClass}" style="font-weight: bold;">${result.category}</span>
+                    </div>
+                `;
+
+                if (result.keywords && result.keywords.length > 0) {
+                    resultsHtml += `
+                        <div style="margin-top: 0.5rem;">
+                            <strong>Keywords:</strong>
+                            <div class="keywords-list" style="margin-top: 0.5rem;">
+                                ${result.keywords.map(kw => `<span class="keyword-tag">${kw}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                resultsHtml += `
+                    <div class="result-status" style="color: var(--danger-color); margin-top: 0.5rem;">
+                        <strong>Error:</strong> ${result.message}
+                    </div>
+                `;
+            }
+
+            resultsHtml += '</div>';
+        });
+
+        // Add summary
+        resultsHtml = `
+            <div class="alert alert-success" style="margin-bottom: 2rem;">
+                <strong>Processing Complete:</strong> ${successCount} successful, ${errorCount} errors
+            </div>
+        ` + resultsHtml;
+
+        document.getElementById('batchResults').innerHTML = resultsHtml;
+        document.getElementById('batchResults').classList.remove('hidden');
+
+        // Scroll to results
+        document.getElementById('batchResults').scrollIntoView({ behavior: 'smooth' });
+
+    } catch (error) {
+        document.getElementById('loading').classList.remove('active');
+        document.getElementById('batchResults').innerHTML = `
+            <div class="alert alert-error">
+                <strong>Error:</strong> Failed to process batch: ${error.message}
+            </div>
+        `;
+        document.getElementById('batchResults').classList.remove('hidden');
+    }
+});
+</script>
+{% endblock %}
