@@ -1,0 +1,314 @@
+{
+  "rf": {
+    "hamming_loss": 0.36442006269592475,
+    "subset_accuracy": 0.006269592476489028,
+    "precision_micro": 0.2836801752464403,
+    "recall_micro": 0.48411214953271026,
+    "f1_micro": 0.35773480662983426,
+    "precision_macro": 0.28472742349664987,
+    "recall_macro": 0.4689438469870762,
+    "f1_macro": 0.3082662286555067,
+    "per_label": {
+      "T_ADMIN": {
+        "precision": 0.015384615384615385,
+        "recall": 0.3333333333333333,
+        "f1": 0.029411764705882353,
+        "support": 3
+      },
+      "T_BANKING": {
+        "precision": 0.07407407407407407,
+        "recall": 0.625,
+        "f1": 0.13245033112582782,
+        "support": 16
+      },
+      "T_CUSTOMER_SERVICE": {
+        "precision": 0.5348837209302325,
+        "recall": 0.4928571428571429,
+        "f1": 0.5130111524163569,
+        "support": 140
+      },
+      "T_DATA_ANALYTICS": {
+        "precision": 0.3235294117647059,
+        "recall": 0.5789473684210527,
+        "f1": 0.41509433962264153,
+        "support": 57
+      },
+      "T_EDUCATION": {
+        "precision": 0.07608695652173914,
+        "recall": 0.3181818181818182,
+        "f1": 0.12280701754385964,
+        "support": 22
+      },
+      "T_EXECUTIVE": {
+        "precision": 0.18439716312056736,
+        "recall": 0.6341463414634146,
+        "f1": 0.2857142857142857,
+        "support": 41
+      },
+      "T_FACILITIES": {
+        "precision": 0.13793103448275862,
+        "recall": 0.6666666666666666,
+        "f1": 0.22857142857142856,
+        "support": 30
+      },
+      "T_FINANCE": {
+        "precision": 0.6363636363636364,
+        "recall": 0.5045045045045045,
+        "f1": 0.5628140703517588,
+        "support": 111
+      },
+      "T_GENERAL_BREACH": {
+        "precision": 0.23308270676691728,
+        "recall": 0.5961538461538461,
+        "f1": 0.33513513513513515,
+        "support": 52
+      },
+      "T_GOVERNMENT": {
+        "precision": 0.15555555555555556,
+        "recall": 0.5121951219512195,
+        "f1": 0.23863636363636365,
+        "support": 41
+      },
+      "T_HR": {
+        "precision": 0.42452830188679247,
+        "recall": 0.4205607476635514,
+        "f1": 0.4225352112676056,
+        "support": 107
+      },
+      "T_INSURANCE": {
+        "precision": 0.11764705882352941,
+        "recall": 0.5,
+        "f1": 0.19047619047619047,
+        "support": 24
+      },
+      "T_IT": {
+        "precision": 0.6814814814814815,
+        "recall": 0.5348837209302325,
+        "f1": 0.5993485342019544,
+        "support": 172
+      },
+      "T_LEGAL": {
+        "precision": 0.7068965517241379,
+        "recall": 0.4606741573033708,
+        "f1": 0.5578231292517006,
+        "support": 178
+      },
+      "T_MANUFACTURING": {
+        "precision": 0.37037037037037035,
+        "recall": 0.5405405405405406,
+        "f1": 0.43956043956043955,
+        "support": 74
+      },
+      "T_MARKETING": {
+        "precision": 0.10714285714285714,
+        "recall": 0.35294117647058826,
+        "f1": 0.1643835616438356,
+        "support": 34
+      },
+      "T_MEDICAL": {
+        "precision": 0.2,
+        "recall": 0.5925925925925926,
+        "f1": 0.29906542056074764,
+        "support": 54
+      },
+      "T_OPERATIONS": {
+        "precision": 0.3161764705882353,
+        "recall": 0.48314606741573035,
+        "f1": 0.38222222222222224,
+        "support": 89
+      },
+      "T_PROCUREMENT": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "T_PRODUCT": {
+        "precision": 0.07575757575757576,
+        "recall": 0.43478260869565216,
+        "f1": 0.12903225806451613,
+        "support": 23
+      },
+      "T_R&D": {
+        "precision": 0.3020833333333333,
+        "recall": 0.3918918918918919,
+        "f1": 0.3411764705882353,
+        "support": 74
+      },
+      "T_RETAIL": {
+        "precision": 0.26865671641791045,
+        "recall": 0.5,
+        "f1": 0.34951456310679613,
+        "support": 72
+      },
+      "T_SALES": {
+        "precision": 0.7866666666666666,
+        "recall": 0.3575757575757576,
+        "f1": 0.49166666666666664,
+        "support": 165
+      },
+      "T_SECURITY": {
+        "precision": 0.10476190476190476,
+        "recall": 0.4230769230769231,
+        "f1": 0.16793893129770993,
+        "support": 26
+      }
+    }
+  },
+  "xgb": {
+    "hamming_loss": 0.18730407523510972,
+    "subset_accuracy": 0.009404388714733543,
+    "precision_micro": 0.610608020698577,
+    "recall_micro": 0.2940809968847352,
+    "f1_micro": 0.3969722455845248,
+    "precision_macro": 0.24469060324152414,
+    "recall_macro": 0.13031753233077,
+    "f1_macro": 0.14424838469811027,
+    "per_label": {
+      "T_ADMIN": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 3
+      },
+      "T_BANKING": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 16
+      },
+      "T_CUSTOMER_SERVICE": {
+        "precision": 0.5764705882352941,
+        "recall": 0.35,
+        "f1": 0.43555555555555553,
+        "support": 140
+      },
+      "T_DATA_ANALYTICS": {
+        "precision": 0.36363636363636365,
+        "recall": 0.07017543859649122,
+        "f1": 0.11764705882352941,
+        "support": 57
+      },
+      "T_EDUCATION": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 22
+      },
+      "T_EXECUTIVE": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 41
+      },
+      "T_FACILITIES": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 30
+      },
+      "T_FINANCE": {
+        "precision": 0.71875,
+        "recall": 0.4144144144144144,
+        "f1": 0.5257142857142857,
+        "support": 111
+      },
+      "T_GENERAL_BREACH": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 52
+      },
+      "T_GOVERNMENT": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 41
+      },
+      "T_HR": {
+        "precision": 0.6923076923076923,
+        "recall": 0.08411214953271028,
+        "f1": 0.15,
+        "support": 107
+      },
+      "T_INSURANCE": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 24
+      },
+      "T_IT": {
+        "precision": 0.5823293172690763,
+        "recall": 0.8430232558139535,
+        "f1": 0.6888361045130641,
+        "support": 172
+      },
+      "T_LEGAL": {
+        "precision": 0.6329787234042553,
+        "recall": 0.6685393258426966,
+        "f1": 0.6502732240437158,
+        "support": 178
+      },
+      "T_MANUFACTURING": {
+        "precision": 0.42857142857142855,
+        "recall": 0.04054054054054054,
+        "f1": 0.07407407407407407,
+        "support": 74
+      },
+      "T_MARKETING": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 34
+      },
+      "T_MEDICAL": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 54
+      },
+      "T_OPERATIONS": {
+        "precision": 0.47368421052631576,
+        "recall": 0.10112359550561797,
+        "f1": 0.16666666666666666,
+        "support": 89
+      },
+      "T_PROCUREMENT": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
+      },
+      "T_PRODUCT": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 23
+      },
+      "T_R&D": {
+        "precision": 0.75,
+        "recall": 0.04054054054054054,
+        "f1": 0.07692307692307693,
+        "support": 74
+      },
+      "T_RETAIL": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 72
+      },
+      "T_SALES": {
+        "precision": 0.6538461538461539,
+        "recall": 0.5151515151515151,
+        "f1": 0.576271186440678,
+        "support": 165
+      },
+      "T_SECURITY": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 26
+      }
+    }
+  }
+}
