@@ -677,3 +677,38 @@ footer {
     content: '> ';
     color: var(--text-color); /* change from accent to white */
 }
+
+/* ============================================
+   Loading Overlay
+   ============================================ */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11,18,32,0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+.loading-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+.loading-content {
+  text-align: center;
+  padding: 2rem 3rem;
+  background: var(--accent-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+.loading-line {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.loading-line:first-child { color: var(--text-color); }

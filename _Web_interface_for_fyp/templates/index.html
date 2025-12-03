@@ -3,6 +3,14 @@
 {% block title %}ThreatLens - Website Classification System{% endblock %}
 
 {% block content %}
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-content">
+    <div class="loading-line" id="loading-line-1">Entering ThreatLens…</div>
+    <div class="loading-line" id="loading-line-2">Accessing TOR…</div>
+    <div class="loading-line" id="loading-line-3">Loading AI Models…</div>
+  </div>
+</div>
+
 <div class="hero">
     <h1 class="terminal-text">ThreatLens</h1>
     <p>Advanced Website Classification System using Machine Learning to identify potential security threats and data leaks</p>
@@ -100,5 +108,22 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+// staged loading overlay messages
+(function(){
+  const overlay = document.getElementById('loading-overlay');
+  if(!overlay) return;
+  const l1 = document.getElementById('loading-line-1');
+  const l2 = document.getElementById('loading-line-2');
+  const l3 = document.getElementById('loading-line-3');
+  l1.style.opacity = 1;
+  setTimeout(()=>{ l2.style.opacity = 1; }, 800);
+  setTimeout(()=>{ l3.style.opacity = 1; }, 1600);
+  // Hide after 3 seconds, or later if images still loading
+  setTimeout(()=>{
+    overlay.classList.add('hidden');
+  }, 3000);
+})();
+</script>
 <script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 {% endblock %}

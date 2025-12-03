@@ -230,8 +230,11 @@ def index():
         df = pd.read_csv(csv_path, usecols=usecols)
         # First 500 rows
         df = df.head(500)
-        # Filter rows with non-empty image_url
-        df = df[df["image_url"].astype(str).str.strip().ne("")]
+        # Filter rows with non-empty image_url and only from specific onion host
+        onion_host = "5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid"
+        df["image_url"] = df["image_url"].astype(str)
+        df = df[df["image_url"].str.strip().ne("")]
+        df = df[df["image_url"].str.contains(onion_host, case=False, na=False)]
         # Sample random 20; if fewer than 20, take all
         sample_count = min(20, len(df))
         if sample_count > 0:
