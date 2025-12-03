@@ -571,7 +571,7 @@ footer {
 .breach-carousel .carousel-image {
   width: 100%;
   height: 220px;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   background-color: #111;
 }
@@ -581,6 +581,18 @@ footer {
 .breach-carousel .slide-title {
   font-weight: 600;
   margin-bottom: 0.25rem;
+}
+.breach-carousel .slide-title-link {
+  display: block;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease;
+}
+.breach-carousel .slide-title-link:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
 }
 .breach-carousel .slide-content {
   color: var(--text-muted);
@@ -597,18 +609,40 @@ footer {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  width: 36px;
-  height: 36px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--primary-color);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 2;
+  z-index: 10;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  user-select: none;
 }
-.breach-carousel .carousel-control.prev { left: 8px; }
-.breach-carousel .carousel-control.next { right: 8px; }
+.breach-carousel .carousel-control:hover {
+  background: var(--primary-color);
+  color: #000;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+  border-color: var(--accent-color);
+}
+.breach-carousel .carousel-control:active {
+  transform: translateY(-50%) scale(0.95);
+}
+.breach-carousel .carousel-control.prev {
+  left: 12px;
+}
+.breach-carousel .carousel-control.next {
+  right: 12px;
+}
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
