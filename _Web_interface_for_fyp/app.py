@@ -113,25 +113,39 @@ def extract_keywords(text, num_keywords=10):
     word_counts = Counter(filtered_words)
     return [word for word, _ in word_counts.most_common(num_keywords)]
 
-def classify_url(url, selected_model="xgboost", use_tor=False):
-    """Classify a single URL using the selected model"""
+def classify_url(url, selected_model="xgboost", use_tor=False, auto_detect_tor=False):
+    """Classify a single URL using the selected model
+
+    Args:
+        url: URL to classify
+        selected_model: Model to use for classification
+        use_tor: Force use of Tor proxy
+        auto_detect_tor: Automatically use Tor for .onion, normal connection for others
+    """
     try:
         if not url.startswith("http"):
             url = "http://" + url
 
-        # Detect .onion URLs and require Tor
-        host = url.lower()
-        if ".onion" in host and not use_tor:
-            return {
-                "url": url,
-                "status": "error",
-                "message": "Detected a .onion address. Please turn the Tor proxy on and try again.",
-                "category": None,
-                "keywords": None
-            }
+        # Auto-detect: Use Tor for .onion, normal connection for others
+        is_onion = ".onion" in url.lower()
 
-        proxies = PROXIES if use_tor else None
-        timeout = 30 if use_tor else 10
+        if auto_detect_tor:
+            # Batch mode: automatically choose connection type
+            use_tor_for_request = is_onion
+        else:
+            # Single URL mode: follow user's Tor setting
+            if is_onion and not use_tor:
+                return {
+                    "url": url,
+                    "status": "error",
+                    "message": "Detected a .onion address. Please turn the Tor proxy on and try again.",
+                    "category": None,
+                    "keywords": None
+                }
+            use_tor_for_request = use_tor
+
+        proxies = PROXIES if use_tor_for_request else None
+        timeout = 30 if use_tor_for_request else 10
 
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -360,7 +374,6 @@ def classify_batch():
         return jsonify({"error": "No file selected"}), 400
 
     selected_model = request.form.get("model", "xgboost")
-    use_tor = request.form.get("use_tor") == "true"
 
     try:
         filename = secure_filename(file.filename)
@@ -390,20 +403,59 @@ def classify_batch():
         if len(urls) == 0:
             return jsonify({"error": "No URLs found in file"}), 400
 
-        # Classify each URL
+        # Classify each URL with auto-detect Tor (use Tor for .onion, normal for others)
         results = []
-        for url in urls[:50]:  # Limit to 50 URLs to prevent timeout
-            result = classify_url(url, selected_model, use_tor)
+        categories = []
+        for url in urls[:100]:  # Increased limit to 100 URLs
+            result = classify_url(url, selected_model, use_tor=False, auto_detect_tor=True)
             results.append(result)
+            if result['status'] == 'success' and result['category']:
+                categories.append(result['category'])
+
+        # Generate statistics
+        category_counts = Counter(categories)
+        statistics = {
+            "total": len(results),
+            "successful": len(categories),
+            "failed": len(results) - len(categories),
+            "categories": dict(category_counts)
+        }
+
+        # Create results DataFrame with category column
+        results_df = df.head(len(results)).copy()
+        results_df['Classification'] = [r['category'] if r['status'] == 'success' else r['message'] for r in results]
+        results_df['Status'] = [r['status'] for r in results]
+
+        # Save results CSV
+        timestamp = pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')
+        output_filename = f"classified_results_{timestamp}.csv"
+        output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+        results_df.to_csv(output_filepath, index=False)
 
         # Clean up uploaded file
         os.remove(filepath)
 
-        return jsonify({"results": results})
+        return jsonify({
+            "results": results,
+            "statistics": statistics,
+            "download_file": output_filename
+        })
 
     except Exception as e:
         return jsonify({"error": f"Error processing file: {str(e)}"}), 500
 
+@app.route("/download/<filename>")
+def download_file(filename):
+    """Download classified results CSV"""
+    try:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if os.path.exists(filepath):
+            from flask import send_file
+            return send_file(filepath, as_attachment=True, download_name=filename)
+        else:
+            return jsonify({"error": "File not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 @app.route("/telegram_alert", methods=["GET", "POST"])
 def telegram_alert():
     """Telegram Alerts page - Send breach predictions to Telegram channel"""

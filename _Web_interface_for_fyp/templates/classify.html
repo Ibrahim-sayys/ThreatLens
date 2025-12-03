@@ -51,11 +51,8 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                    <input type="checkbox" id="use_tor_batch" name="use_tor" value="true">
-                    <span>Use Tor Proxy (for .onion sites)</span>
-                </label>
+            <div class="alert" style="background: rgba(0, 255, 255, 0.1); border: 1px solid var(--primary-color); padding: 1rem; margin-bottom: 1rem; border-radius: var(--radius-md);">
+                <strong>ℹ️ Auto-Detection:</strong> The system automatically uses Tor for .onion URLs and normal connections for regular URLs.
             </div>
 
             <div class="file-upload" id="fileUploadArea">
@@ -63,7 +60,7 @@
                     <div style="font-size: 3rem;">📁</div>
                     <div>Click to upload CSV or Excel file</div>
                     <div class="text-muted" style="font-size: 0.9rem;">File should contain a column named "url", "urls", "website", or "link"</div>
-                    <div class="text-muted" style="font-size: 0.9rem;">Maximum 50 URLs per batch</div>
+                    <div class="text-muted" style="font-size: 0.9rem;">Maximum 100 URLs per batch</div>
                 </label>
                 <input type="file" id="fileInput" name="file" accept=".csv,.xlsx,.xls" required>
             </div>
@@ -80,6 +77,7 @@
     </div>
 
     <!-- Single Result Display -->
+    <div id="singleResult" {% if not result %}class="hidden"{% endif %}>
     {% if result %}
     <div class="result-box {% if result.status == 'success' %}success{% else %}error{% endif %}">
         {% if result.status == 'success' %}
@@ -110,6 +108,7 @@
         {% endif %}
     </div>
     {% endif %}
+    </div>
 
     <!-- Batch Results Display -->
     <div id="batchResults" class="batch-results hidden"></div>
@@ -129,6 +128,10 @@ function showBatchUrl() {
     document.getElementById('batchUploadForm').classList.remove('hidden');
     document.getElementById('batchUrlBtn').classList.add('btn-primary');
     document.getElementById('singleUrlBtn').classList.remove('btn-primary');
+    const singleResult = document.getElementById('singleResult');
+    if (singleResult) {
+        singleResult.classList.add('hidden');
+    }
 }
 
 // File upload handling
@@ -169,15 +172,74 @@ document.getElementById('batchForm').addEventListener('submit', async function(e
             return;
         }
 
-        // Display results
-        let resultsHtml = '<h2 class="terminal-text" style="margin-bottom: 1rem;">Batch Results</h2>';
-        let successCount = 0;
-        let errorCount = 0;
+        // Display statistics
+        let resultsHtml = '<h2 class="terminal-text" style="margin-bottom: 1.5rem;">Batch Classification Results</h2>';
+
+        const stats = data.statistics;
+        resultsHtml += `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div style="background: var(--card-bg); padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-lg); text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: bold; color: var(--primary-color);">${stats.total}</div>
+                    <div style="color: var(--text-muted); margin-top: 0.5rem;">Total URLs</div>
+                </div>
+                <div style="background: var(--card-bg); padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-lg); text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #27ae60;">${stats.successful}</div>
+                    <div style="color: var(--text-muted); margin-top: 0.5rem;">Successful</div>
+                </div>
+                <div style="background: var(--card-bg); padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-lg); text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #c0392b;">${stats.failed}</div>
+                    <div style="color: var(--text-muted); margin-top: 0.5rem;">Failed</div>
+                </div>
+            </div>
+        `;
+
+        // Display category breakdown
+        if (stats.categories && Object.keys(stats.categories).length > 0) {
+            resultsHtml += `
+                <div style="background: var(--card-bg); padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-lg); margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Classification Breakdown:</h3>
+                    <div style="display: grid; gap: 0.75rem;">
+            `;
+
+            for (const [category, count] of Object.entries(stats.categories)) {
+                const categoryClass = category.toLowerCase() === 'leaks' ? 'category-leaks' : 'category-others';
+                resultsHtml += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: var(--radius-md);">
+                        <span class="${categoryClass}" style="font-weight: 600; font-size: 1.1rem;">${category}</span>
+                        <span style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);">${count}</span>
+                    </div>
+                `;
+            }
+
+            resultsHtml += `
+                    </div>
+                </div>
+            `;
+        }
+
+        // Download button
+        if (data.download_file) {
+            resultsHtml += `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <a href="/download/${data.download_file}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; padding: 1rem 2rem;">
+                        <span>📥</span>
+                        <span>Download Classified Results CSV</span>
+                    </a>
+                </div>
+            `;
+        }
+
+        // Display individual results (collapsed by default)
+        resultsHtml += `
+            <details style="margin-top: 2rem;">
+                <summary style="cursor: pointer; font-size: 1.2rem; font-weight: 600; padding: 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg);">
+                    View Detailed Results (${data.results.length} items)
+                </summary>
+                <div style="margin-top: 1rem;">
+        `;
 
         data.results.forEach(result => {
             const statusClass = result.status === 'success' ? 'success' : 'error';
-            if (result.status === 'success') successCount++;
-            else errorCount++;
 
             resultsHtml += `
                 <div class="batch-result-item ${statusClass}">
@@ -214,12 +276,11 @@ document.getElementById('batchForm').addEventListener('submit', async function(e
             resultsHtml += '</div>';
         });
 
-        // Add summary
-        resultsHtml = `
-            <div class="alert alert-success" style="margin-bottom: 2rem;">
-                <strong>Processing Complete:</strong> ${successCount} successful, ${errorCount} errors
-            </div>
-        ` + resultsHtml;
+        resultsHtml += `
+                </div>
+            </details>
+        `;
+
 
         document.getElementById('batchResults').innerHTML = resultsHtml;
         document.getElementById('batchResults').classList.remove('hidden');
