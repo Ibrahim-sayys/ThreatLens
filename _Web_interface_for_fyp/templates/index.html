@@ -32,6 +32,49 @@
         </div>
     </div>
 
+    <!-- Breach Carousel Section -->
+    <div class="breach-carousel" style="margin-top: 3rem;">
+        <div class="carousel-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h2 class="terminal-text">Recent Breaches</h2>
+            {% if not tor_available %}
+            <div class="tor-alert" style="color:#c0392b;">Tor proxy not detected on 127.0.0.1:9050. Images from .onion may not load.</div>
+            {% endif %}
+        </div>
+
+        {% if breaches and breaches|length > 0 %}
+        <div class="carousel" id="breachCarousel">
+            <button class="carousel-control prev" aria-label="Previous">‹</button>
+            <div class="carousel-track">
+                {% for item in breaches %}
+                <div class="carousel-slide">
+                    <a href="{{ item.image_url }}" target="_blank" rel="noopener noreferrer" class="image-link">
+                        <img loading="lazy"
+                             src="{{ url_for('image_proxy') }}?url={{ item.image_url|urlencode }}"
+                             alt="{{ item.company_name }}"
+                             class="carousel-image"
+                             data-fallback="{{ url_for('static', filename='img/placeholder.svg') }}"
+                             onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/placeholder.svg') }}';">
+                    </a>
+                    <div class="slide-info">
+                        <div class="slide-title">{{ item.company_name }}</div>
+                        <div class="slide-content">{{ item.content }}</div>
+                        <div class="slide-meta">
+                            <span class="views">Views: {{ item.views_count }}</span>
+                            {% if item.download_link %}
+                            <a href="{{ item.download_link }}" target="_blank" rel="noopener" class="download-link">Download</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control next" aria-label="Next">›</button>
+        </div>
+        {% else %}
+        <p class="text-muted">No breach items available to display.</p>
+        {% endif %}
+    </div>
+
     <div style="margin-top: 4rem; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border-color);">
         <h2 class="terminal-text" style="margin-bottom: 1rem;">How It Works</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
@@ -54,4 +97,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 {% endblock %}

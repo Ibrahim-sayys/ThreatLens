@@ -9,6 +9,8 @@ import joblib
 from nltk.corpus import stopwords
 import nltk
 from werkzeug.utils import secure_filename
+import socket
+import random
 
 # Ensure stopwords are downloaded
 try:
@@ -80,6 +82,14 @@ PROXIES = {
     'http': 'socks5h://127.0.0.1:9050',
     'https': 'socks5h://127.0.0.1:9050',
 }
+
+def is_tor_available(host='127.0.0.1', port=9050, timeout=1.0):
+    """Quickly check if Tor SOCKS proxy is reachable"""
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
 
 def extract_text_from_html(html_content):
     """Extract clean text from HTML content"""
@@ -210,8 +220,63 @@ def classify_url(url, selected_model="xgboost", use_tor=False):
 
 @app.route("/")
 def index():
-    """Home page"""
-    return render_template("index.html")
+    """Home page with breach carousel"""
+    # Load CSV and prepare random 20 items from first 500 having image_url
+    csv_path = "/home/ibrahim-sayys/Projects/ThreatLens/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/threat_intelligence_data.csv"
+    breaches = []
+    try:
+        # Read only necessary columns to reduce memory
+        usecols = ["company_name", "content", "download_link", "image_url", "views_count"]
+        df = pd.read_csv(csv_path, usecols=usecols)
+        # First 500 rows
+        df = df.head(500)
+        # Filter rows with non-empty image_url
+        df = df[df["image_url"].astype(str).str.strip().ne("")]
+        # Sample random 20; if fewer than 20, take all
+        sample_count = min(20, len(df))
+        if sample_count > 0:
+            df_sample = df.sample(n=sample_count, random_state=random.randint(0, 10_000))
+            for _, row in df_sample.iterrows():
+                company_name = str(row.get("company_name", "")).strip()
+                content = str(row.get("content", "")).strip()
+                # Truncate content to ~180 chars
+                max_len = 180
+                truncated = (content[:max_len] + "…") if len(content) > max_len else content
+                breaches.append({
+                    "company_name": company_name or "Unknown",
+                    "content": truncated,
+                    "download_link": str(row.get("download_link", "")).strip(),
+                    "image_url": str(row.get("image_url", "")).strip(),
+                    "views_count": int(row.get("views_count", 0)) if pd.notna(row.get("views_count", None)) else 0
+                })
+    except Exception as e:
+        print(f"Failed to load breaches CSV: {e}")
+
+    tor_available = is_tor_available()
+    return render_template("index.html", breaches=breaches, tor_available=tor_available)
+
+@app.route('/image_proxy')
+def image_proxy():
+    """Proxy image fetch via Tor for .onion and other URLs; returns image bytes.
+    If fetch fails, respond 502 and let frontend show a placeholder.
+    """
+    url = request.args.get('url', '').strip()
+    if not url:
+        return ("Missing url", 400)
+    try:
+        # Force Tor for .onion; otherwise still use Tor to avoid DNS leaks
+        proxies = PROXIES
+        timeout = 30
+        headers = {
+            'User-Agent': 'Mozilla/5.0'
+        }
+        resp = requests.get(url, proxies=proxies, timeout=timeout, headers=headers, stream=True)
+        if resp.status_code != 200:
+            return (f"Upstream status {resp.status_code}", 502)
+        content_type = resp.headers.get('Content-Type', 'image/jpeg')
+        return (resp.content, 200, {'Content-Type': content_type, 'Cache-Control': 'no-store'})
+    except Exception as e:
+        return (f"Proxy error: {str(e)}", 502)
 
 @app.route("/classify", methods=["GET", "POST"])
 def classify():
