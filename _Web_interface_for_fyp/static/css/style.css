@@ -490,6 +490,14 @@ textarea.form-control {
     justify-content: center;
     font-size: 4rem;
     color: var(--primary-color);
+    overflow: hidden;
+}
+
+.developer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .developer-name {
@@ -654,6 +662,113 @@ footer {
 }
 
 /* ============================================
+   Document Carousel (Portrait)
+   ============================================ */
+
+.document-carousel .carousel {
+  position: relative;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+}
+.document-carousel .carousel-track {
+  display: flex;
+  transition: transform 0.4s ease;
+}
+.document-carousel .carousel-slide {
+  min-width: 240px;
+  max-width: 280px;
+  margin-right: 1rem;
+  background: rgba(0,0,0,0.02);
+  border: 1px solid var(--border-color);
+}
+.document-carousel .carousel-image {
+  width: 100%;
+  height: 380px;
+  object-fit: contain;
+  display: block;
+  background-color: #111;
+}
+.document-carousel .slide-info {
+  padding: 0.75rem 0.75rem 1rem;
+}
+.document-carousel .slide-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.document-carousel .slide-title-link {
+  display: block;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease;
+}
+.document-carousel .slide-title-link:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+.document-carousel .slide-content {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.document-carousel .slide-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+.document-carousel .carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--primary-color);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  user-select: none;
+}
+.document-carousel .carousel-control:hover {
+  background: var(--primary-color);
+  color: #000;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+  border-color: var(--accent-color);
+}
+.document-carousel .carousel-control:active {
+  transform: translateY(-50%) scale(0.95);
+}
+.document-carousel .carousel-control.prev {
+  left: 12px;
+}
+.document-carousel .carousel-control.next {
+  right: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .document-carousel .carousel-slide {
+    min-width: 70%;
+    max-width: 70%;
+  }
+  .document-carousel .carousel-image { height: 320px; }
+}
+
+/* ============================================
    Responsive Design
    ============================================ */
 
@@ -729,20 +844,41 @@ footer {
 .loading-overlay.hidden {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
 }
 .loading-content {
   text-align: center;
-  padding: 2rem 3rem;
-  background: var(--accent-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
-.loading-line {
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
-  opacity: 0;
-  transition: opacity 0.6s ease;
+
+/* Circular Spinner */
+.loading-spinner {
+  width: 80px;
+  height: 80px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
-.loading-line:first-child { color: var(--text-color); }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Loading Text */
+.loading-text {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  min-height: 1.5rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}

@@ -1,5 +1,6 @@
-(function(){
-  const carousel = document.getElementById('breachCarousel');
+// Initialize carousel with infinite loop support
+function initCarousel(carouselId) {
+  const carousel = document.getElementById(carouselId);
   if(!carousel) return;
   const track = carousel.querySelector('.carousel-track');
   const slides = Array.from(track.children);
@@ -93,5 +94,13 @@
 
   // Initial update
   update(false);
+}
+
+// Initialize both carousels
+(function(){
+  initCarousel('breachCarousel');
+  initCarousel('documentCarousel');
 })();
+
+
 

@@ -224,21 +224,25 @@ def index():
     # Load CSV and prepare random 20 items from first 500 having image_url
     csv_path = "/home/ibrahim-sayys/Projects/ThreatLens/Scraping_Sites_for_Threat_Intelligence_Model_taining_DS/threat_intelligence_data.csv"
     breaches = []
+    documents = []  # Second carousel for sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad
+
     try:
         # Read only necessary columns to reduce memory
         usecols = ["company_name", "content", "download_link", "image_url", "views_count"]
         df = pd.read_csv(csv_path, usecols=usecols)
         # First 500 rows
         df = df.head(500)
-        # Filter rows with non-empty image_url and only from specific onion host
-        onion_host = "5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid"
         df["image_url"] = df["image_url"].astype(str)
         df = df[df["image_url"].str.strip().ne("")]
-        df = df[df["image_url"].str.contains(onion_host, case=False, na=False)]
-        # Sample random 20; if fewer than 20, take all
-        sample_count = min(20, len(df))
+
+        # First carousel: 5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid
+        onion_host = "5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid"
+        df_breaches = df[df["image_url"].str.contains(onion_host, case=False, na=False)]
+        # Filter out records with company_name "Victim" (case insensitive)
+        df_breaches = df_breaches[~df_breaches["company_name"].astype(str).str.strip().str.lower().eq("victim")]
+        sample_count = min(20, len(df_breaches))
         if sample_count > 0:
-            df_sample = df.sample(n=sample_count, random_state=random.randint(0, 10_000))
+            df_sample = df_breaches.sample(n=sample_count, random_state=random.randint(0, 10_000))
             for _, row in df_sample.iterrows():
                 company_name = str(row.get("company_name", "")).strip()
                 content = str(row.get("content", "")).strip()
@@ -252,11 +256,42 @@ def index():
                     "image_url": str(row.get("image_url", "")).strip(),
                     "views_count": int(row.get("views_count", 0)) if pd.notna(row.get("views_count", None)) else 0
                 })
+            # Shuffle the breaches list
+            random.shuffle(breaches)
+
+        # Second carousel: sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad (portrait documents/PDFs)
+        doc_host = "sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad"
+        df_docs = df[df["image_url"].str.contains(doc_host, case=False, na=False)]
+        # Filter out records with company_name "Victim" (case insensitive)
+        df_docs = df_docs[~df_docs["company_name"].astype(str).str.strip().str.lower().eq("victim")]
+        sample_count_docs = min(15, len(df_docs))
+        if sample_count_docs > 0:
+            df_sample_docs = df_docs.sample(n=sample_count_docs, random_state=random.randint(0, 10_000))
+            for _, row in df_sample_docs.iterrows():
+                company_name = str(row.get("company_name", "")).strip()
+                content = str(row.get("content", "")).strip()
+                max_len = 180
+                truncated = (content[:max_len] + "…") if len(content) > max_len else content
+                image_url_raw = str(row.get("image_url", "")).strip()
+
+                # Parse comma-separated URLs
+                image_urls = [url.strip() for url in image_url_raw.split(',') if url.strip()]
+
+                # Create a document entry for each URL (or take first few if too many)
+                for img_url in image_urls[:5]:  # Limit to first 5 images per company
+                    documents.append({
+                        "company_name": company_name or "Unknown",
+                        "content": truncated,
+                        "download_link": str(row.get("download_link", "")).strip(),
+                        "image_url": img_url
+                    })
+            # Shuffle the documents list
+            random.shuffle(documents)
     except Exception as e:
         print(f"Failed to load breaches CSV: {e}")
 
     tor_available = is_tor_available()
-    return render_template("index.html", breaches=breaches, tor_available=tor_available)
+    return render_template("index.html", breaches=breaches, documents=documents, tor_available=tor_available)
 
 @app.route('/image_proxy')
 def image_proxy():
