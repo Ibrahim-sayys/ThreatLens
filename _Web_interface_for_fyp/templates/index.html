@@ -3,12 +3,104 @@
 {% block title %}ThreatLens - Website Classification System{% endblock %}
 
 {% block content %}
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-content">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">Initializing ThreatLens...</div>
+  </div>
+</div>
+
 <div class="hero">
     <h1 class="terminal-text">ThreatLens</h1>
     <p>Advanced Website Classification System using Machine Learning to identify potential security threats and data leaks</p>
 </div>
 
 <div class="container">
+    <!-- Breach Carousel Section -->
+    <div class="breach-carousel" style="margin-bottom: 3rem;">
+        <div class="carousel-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h2 class="terminal-text">Recent Breaches</h2>
+            {% if not tor_available %}
+            <div class="tor-alert" style="color:#c0392b;">Tor proxy not detected on 127.0.0.1:9050. Images from .onion may not load.</div>
+            {% endif %}
+        </div>
+
+        {% if breaches and breaches|length > 0 %}
+        <div class="carousel" id="breachCarousel">
+            <button class="carousel-control prev" aria-label="Previous">◀</button>
+            <div class="carousel-track">
+                {% for item in breaches %}
+                <div class="carousel-slide">
+                    <a href="{{ item.image_url }}" target="_blank" rel="noopener noreferrer" class="image-link">
+                        <img loading="lazy"
+                             src="{{ url_for('image_proxy') }}?url={{ item.image_url|urlencode }}"
+                             alt="{{ item.company_name }}"
+                             class="carousel-image"
+                             data-fallback="{{ url_for('static', filename='img/placeholder.svg') }}"
+                             onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/placeholder.svg') }}';">
+                    </a>
+                    <div class="slide-info">
+                        <a href="http://5butbkrljkaorg5maepuca25oma7eiwo6a2rlhvkblb4v6mf3ki2ovid.onion" target="_blank" rel="noopener noreferrer" class="slide-title slide-title-link">{{ item.company_name }}</a>
+                        <div class="slide-content">{{ item.content }}</div>
+                        <div class="slide-meta">
+                            <span class="views">Views: {{ item.views_count }}</span>
+                            {% if item.download_link %}
+                            <a href="{{ item.download_link }}" target="_blank" rel="noopener" class="download-link">Download</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control next" aria-label="Next">▶</button>
+        </div>
+        {% else %}
+        <p class="text-muted">No breach items available to display.</p>
+        {% endif %}
+    </div>
+
+    <!-- Document Carousel Section (Portrait PDFs/Scans) -->
+    <div class="document-carousel" style="margin-bottom: 3rem;">
+        <div class="carousel-header" style="display:flex;justify-content:space-between;align-items:center;">
+            <h2 class="terminal-text">Leaked Documents</h2>
+            {% if not tor_available %}
+            <div class="tor-alert" style="color:#c0392b;">Tor proxy not detected on 127.0.0.1:9050. Images from .onion may not load.</div>
+            {% endif %}
+        </div>
+
+        {% if documents and documents|length > 0 %}
+        <div class="carousel" id="documentCarousel">
+            <button class="carousel-control prev" aria-label="Previous">◀</button>
+            <div class="carousel-track">
+                {% for item in documents %}
+                <div class="carousel-slide">
+                    <a href="{{ item.image_url }}" target="_blank" rel="noopener noreferrer" class="image-link">
+                        <img loading="lazy"
+                             src="{{ url_for('image_proxy') }}?url={{ item.image_url|urlencode }}"
+                             alt="{{ item.company_name }}"
+                             class="carousel-image"
+                             data-fallback="{{ url_for('static', filename='img/placeholder.svg') }}"
+                             onerror="this.onerror=null; this.src='{{ url_for('static', filename='img/placeholder.svg') }}';">
+                    </a>
+                    <div class="slide-info">
+                        <a href="http://sarcomawmawlhov7o5mdhz4eszxxlkyaoiyiy2b5iwxnds2dmb4jakad.onion" target="_blank" rel="noopener noreferrer" class="slide-title slide-title-link">{{ item.company_name }}</a>
+                        <div class="slide-content">{{ item.content }}</div>
+                        {% if item.download_link %}
+                        <div class="slide-meta">
+                            <a href="{{ item.download_link }}" target="_blank" rel="noopener" class="download-link">Download</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control next" aria-label="Next">▶</button>
+        </div>
+        {% else %}
+        <p class="text-muted">No document items available to display.</p>
+        {% endif %}
+    </div>
+
     <div class="card-grid">
         <div class="card">
             <div class="card-icon">🔍</div>
@@ -54,4 +146,41 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Loading overlay with progressive messages
+(function(){
+  const overlay = document.getElementById('loading-overlay');
+  if(!overlay) return;
+  const loadingText = document.getElementById('loading-text');
+
+  const messages = [
+    'Initializing ThreatLens...',
+    'Connecting to Threat Intelligence...',
+    'Loading AI Models...',
+    'Preparing Interface...'
+  ];
+
+  let currentIndex = 0;
+
+  // Change message every 600ms
+  const messageInterval = setInterval(() => {
+    currentIndex++;
+    if(currentIndex < messages.length) {
+      loadingText.textContent = messages[currentIndex];
+    } else {
+      clearInterval(messageInterval);
+    }
+  }, 600);
+
+  // Hide overlay after 2.5 seconds
+  setTimeout(() => {
+    clearInterval(messageInterval);
+    overlay.classList.add('hidden');
+  }, 2500);
+})();
+</script>
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
 {% endblock %}
