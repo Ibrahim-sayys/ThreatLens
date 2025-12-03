@@ -16,6 +16,7 @@
             <ul class="nav-links">
                 <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a></li>
                 <li><a href="{{ url_for('classify') }}" {% if request.endpoint == 'classify' %}class="active"{% endif %}>Classify</a></li>
+                <li><a href="{{ url_for('telegram_alert') }}" {% if request.endpoint == 'telegram_alert' %}class="active"{% endif %}>Telegram Alerts</a></li>
                 <li><a href="{{ url_for('orion') }}">Try Orion Intelligence</a></li>
                 <li><a href="{{ url_for('developers') }}" {% if request.endpoint == 'developers' %}class="active"{% endif %}>Developers</a></li>
                 <li><a href="{{ url_for('about') }}" {% if request.endpoint == 'about' %}class="active"{% endif %}>About</a></li>
