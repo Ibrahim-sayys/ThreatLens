@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="terminal-text" style="margin-bottom: 2rem;">Website Classification</h1>
+    <h1 class="terminal" style="margin-bottom: 2rem;">Website Classification</h1>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
         <button class="btn btn-primary" id="singleUrlBtn" onclick="showSingleUrl()">Single URL</button>
@@ -173,7 +173,7 @@ document.getElementById('batchForm').addEventListener('submit', async function(e
         }
 
         // Display statistics
-        let resultsHtml = '<h2 class="terminal-text" style="margin-bottom: 1.5rem;">Batch Classification Results</h2>';
+        let resultsHtml = '<h2 class="terminal" style="margin-bottom: 1.5rem;">Batch Classification Results</h2>';
 
         const stats = data.statistics;
         resultsHtml += `

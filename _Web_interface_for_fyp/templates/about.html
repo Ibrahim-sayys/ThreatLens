@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="terminal-text" style="margin-bottom: 2rem;">About ThreatLens</h1>
+    <h1 class="terminal" style="margin-bottom: 2rem;">About ThreatLens</h1>
 
     <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem; margin-bottom: 2rem;">
         <h2 style="margin-bottom: 1rem;">Our Mission</h2>
@@ -16,7 +16,7 @@
         </p>
     </div>
 
-    <h2 class="terminal-text" style="margin-bottom: 2rem;">Key Features</h2>
+    <h2 class="terminal" style="margin-bottom: 2rem;">Key Features</h2>
 
     <div class="card-grid">
         <div class="card">
@@ -72,10 +72,28 @@
                 balanced and accurate predictions.
             </p>
         </div>
+
+        <div class="card">
+            <div class="card-icon">🛡️</div>
+            <h3>Threat Prediction</h3>
+            <p>
+                Advanced predictive analytics to assess threat likelihood based on content patterns,
+                keywords, and behavioral indicators, enabling proactive security monitoring and risk prioritization.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">📱</div>
+            <h3>Telegram Alerts</h3>
+            <p>
+                Real-time notifications via Telegram for threat detections and classifications,
+                keeping security teams instantly informed of potential risks and enabling rapid response.
+            </p>
+        </div>
     </div>
 
     <div style="margin-top: 3rem; background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem;">
-        <h2 class="terminal-text" style="margin-bottom: 1rem;">How Classification Works</h2>
+        <h2 class="terminal" style="margin-bottom: 1rem;">How Classification Works</h2>
 
         <div style="margin-top: 2rem;">
             <div style="display: flex; gap: 1rem; margin-bottom: 2rem; padding: 1rem; background: var(--accent-color);">
@@ -111,7 +129,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 1rem; padding: 1rem; background: var(--accent-color);">
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; padding: 1rem; background: var(--accent-color);">
                 <div style="font-size: 2rem; font-weight: bold; color: var(--text-color);">4</div>
                 <div>
                     <h4 style="margin-bottom: 0.5rem;">Classification</h4>
@@ -121,27 +139,32 @@
                     </p>
                 </div>
             </div>
+
+            <div style="display: flex; gap: 1rem; padding: 1rem; background: var(--accent-color);">
+                <div style="font-size: 2rem; font-weight: bold; color: var(--text-color);">5</div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Threat Prediction</h4>
+                    <p style="color: var(--text-muted);">
+                        Beyond classification, the system generates a <strong>risk score</strong> and threat
+                        probability based on content analysis, keyword patterns, and historical indicators.
+                        This enables security teams to prioritize responses and proactively monitor high-risk targets.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
     <div style="margin-top: 3rem; background: var(--card-bg); border: 1px solid var(--border-color); padding: 2rem;">
-        <h2 class="terminal-text" style="margin-bottom: 1rem;">Available Models</h2>
+        <h2 class="terminal" style="margin-bottom: 1rem;">Available Models</h2>
         <ul style="color: var(--text-muted); line-height: 2; list-style: none;">
-            <li>🔹 <strong>Naive Bayes (SMOTE):</strong> Probabilistic classifier based on Bayes' theorem</li>
-            <li>🔹 <strong>XGBoost (SMOTE):</strong> Gradient boosting framework optimized for speed and performance</li>
-            <li>🔹 <strong>CatBoost (SMOTE):</strong> Gradient boosting library with categorical feature support</li>
-            <li>🔹 <strong>Random Forest (SMOTE):</strong> Ensemble learning method using multiple decision trees</li>
-            <li>🔹 <strong>Gradient Boosting (SMOTE):</strong> Traditional gradient boosting for classification</li>
+            <li>🔹 <strong>Naive Bayes:</strong> Probabilistic classifier based on Bayes' theorem</li>
+            <li>🔹 <strong>XGBoost:</strong> Gradient boosting framework optimized for speed and performance</li>
+            <li>🔹 <strong>CatBoost:</strong> Gradient boosting library with categorical feature support</li>
+            <li>🔹 <strong>Random Forest:</strong> Ensemble learning method using multiple decision trees</li>
+            <li>🔹 <strong>Gradient Boosting:</strong> Traditional gradient boosting for classification</li>
         </ul>
     </div>
 
-    <div style="margin-top: 3rem; padding: 2rem; background: rgba(255, 170, 0, 0.1); border: 1px solid var(--warning-color);">
-        <h3 style="color: var(--warning-color); margin-bottom: 1rem;">⚠️ Disclaimer</h3>
-        <p style="color: var(--text-muted); line-height: 1.8;">
-            This tool is designed for educational and research purposes only. Users are responsible for ensuring
-            they have appropriate authorization before analyzing any websites. The developers of ThreatLens are
-            not responsible for any misuse of this system. Always respect privacy laws and website terms of service.
-        </p>
-    </div>
+
 </div>
 {% endblock %}

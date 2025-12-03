@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="terminal-text" style="margin-bottom: 1rem;">Meet the Developers</h1>
+    <h1 class="terminal" style="margin-bottom: 1rem;">Meet the Developers</h1>
     <p class="text-center text-muted" style="margin-bottom: 3rem; font-size: 1.1rem;">
         The minds behind ThreatLens - Building advanced threat Prediction systems
     </p>
@@ -18,7 +18,7 @@
             <h2 class="developer-name">Syed Muhammad Ibrahim</h2>
             <p class="developer-title">Lead Data Scientist & Developer</p>
             <p class="developer-description">
-                change this
+                proficient in machine learning,feature engineering,web scraping and data analysis.
             </p>
             <div class="social-links">
                 <a href="https://www.linkedin.com/in/the-ibrahim/" target="_blank" class="social-link">
@@ -31,12 +31,12 @@
         <!-- Developer 2 -->
         <div class="developer-card">
             <div class="developer-avatar">
-                <img src="{{ url_for('static', filename='img/developer2.jpg') }}" alt="Developer Name 2">
+                <img src="static/img/abdullah.jpeg" alt="Developer Name 2">
             </div>
-            <h2 class="developer-name">Developer Name 2</h2>
-            <p class="developer-title">Full Stack Developer & Data Scientist</p>
+            <h2 class="developer-name">Abdullah Tahir</h2>
+            <p class="developer-title">Researcher</p>
             <p class="developer-description">
-               change this
+               expert in analysis and comparitive studies
             </p>
             <div class="social-links">
                 <a href="https://www.linkedin.com/in/the-ibrahim/" target="_blank" class="social-link">
@@ -48,7 +48,7 @@
     </div>
 
     <div style="margin-top: 4rem; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border-color); text-align: center;">
-        <h3 class="terminal-text" style="margin-bottom: 1rem;">Technologies Used</h3>
+        <h3 class="terminal" style="margin-bottom: 1rem;">Technologies Used</h3>
         <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 2rem;">
             <span class="keyword-tag">Python</span>
             <span class="keyword-tag">Flask</span>
@@ -63,23 +63,6 @@
         </div>
     </div>
 
-    <div style="margin-top: 3rem; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border-color);">
-        <h3 class="terminal-text" style="margin-bottom: 1rem;">Project Information</h3>
-        <div style="color: var(--text-muted); line-height: 1.8;">
-            <p>
-                ThreatLens is an advanced website classification system designed to identify potential security threats
-                and data leaks using state-of-the-art machine learning algorithms.
-            </p>
-            <p style="margin-top: 1rem;">
-                The system employs multiple ML models to analyze website content and classify sites based on their
-                potential threat level. This tool is particularly useful for security researchers, threat intelligence
-                analysts, and organizations looking to monitor and classify web content.
-            </p>
-            <p style="margin-top: 1rem;">
-                <strong>Note:</strong> This tool is designed for educational and
-                research purposes. Always ensure you have proper authorization before analyzing websites.
-            </p>
-        </div>
-    </div>
+
 </div>
 {% endblock %}

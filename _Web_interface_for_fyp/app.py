@@ -38,31 +38,31 @@ MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 # Model file mapping - using SMOTE versions
 MODEL_FILES = {
     "naive_bayes": {
-        "name": "Naive Bayes (SMOTE)",
+        "name": "Naive Bayes",
         "model": os.path.join(MODEL_DIR, "naive_bayes_smote.pkl"),
         "vectorizer": os.path.join(MODEL_DIR, "naive_bayes_vectorizer.pkl"),
         "label_encoder": os.path.join(MODEL_DIR, "naive_bayes_label_encoder.pkl")
     },
     "xgboost": {
-        "name": "XGBoost (SMOTE)",
+        "name": "XGBoost",
         "model": os.path.join(MODEL_DIR, "xgboost_smote.pkl"),
         "vectorizer": os.path.join(MODEL_DIR, "xgboost_vectorizer.pkl"),
         "label_encoder": os.path.join(MODEL_DIR, "xgboost_label_encoder.pkl")
     },
     "catboost": {
-        "name": "CatBoost (SMOTE)",
+        "name": "CatBoost",
         "model": os.path.join(MODEL_DIR, "catboost_smote.pkl"),
         "vectorizer": os.path.join(MODEL_DIR, "catboost_vectorizer.pkl"),
         "label_encoder": os.path.join(MODEL_DIR, "catboost_label_encoder.pkl")
     },
     "random_forest": {
-        "name": "Random Forest (SMOTE)",
+        "name": "Random Forest",
         "model": os.path.join(MODEL_DIR, "random_forest_smote.pkl"),
         "vectorizer": os.path.join(MODEL_DIR, "random_forest_vectorizer.pkl"),
         "label_encoder": os.path.join(MODEL_DIR, "random_forest_label_encoder.pkl")
     },
     "gradient_boosting": {
-        "name": "Gradient Boosting (SMOTE)",
+        "name": "Gradient Boosting",
         "model": os.path.join(MODEL_DIR, "gradient_boosting_smote.pkl"),
         "vectorizer": os.path.join(MODEL_DIR, "gradient_boosting_vectorizer.pkl"),
         "label_encoder": os.path.join(MODEL_DIR, "gradient_boosting_label_encoder.pkl")
